@@ -1,2 +1,2 @@
 # CS_NOTE
-CS NOTE BY MYSELF
+CS interview note
