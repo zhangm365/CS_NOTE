@@ -13,7 +13,11 @@ int main()
 
     Sales_item ibook;
 
+    cin >> ibook;
+
+    cout << ibook << endl;
+
+    return 0;
+
     
-
-
 }
