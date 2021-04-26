@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+
 
 class Sales_data
 {
@@ -79,7 +79,7 @@ inline
 void Sales_data::PrintData()
 {
 
-    cout << bookNo << " " << units_sold << " " << AvgRevenue() << endl; 
+    std::cout << bookNo << " " << units_sold << " " << AvgRevenue() << std::endl; 
 
 }
 
