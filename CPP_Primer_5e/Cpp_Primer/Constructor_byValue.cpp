@@ -24,7 +24,7 @@ class A
         A& operator=(const A& rhs)
         {
             
-            cout << "function operator = \n";
+            cout << "assign ctor\n";
 
             if( this == &rhs ) return *this;
             this->val = rhs.val;
