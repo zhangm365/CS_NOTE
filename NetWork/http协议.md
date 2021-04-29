@@ -4,11 +4,11 @@
 
 1. # **http报文**由报文首部、空行、报文主体组成。
 
--  ## 报文首部：服务端或客户端需处理的请求或响应的内容及属性；
+-  报文首部：服务端或客户端需处理的请求或响应的内容及属性；
 
--  ## 空行：用于划分报文首部和报文主体；
+-  空行：用于划分报文首部和报文主体<CR LF>；
 
--  ## 报文主体：应被发送的内容；
+-  报文主体：应被发送的内容；
 
     
 
@@ -18,21 +18,21 @@
 
 2. # 请求报文的结构
 
--  ## 由请求行、首部字段、空行、报文主体4部分组成；
+-  由**请求行、首部字段、空行、报文主体**4部分组成；
 
--  ## 请求行：方法+URI+HTTP版本组成；
+-  请求行：方法+URI+HTTP版本组成；
 
--  ## 其中首部字段： 请求首部、通用首部、实用首部、其他组成；
+-  其中首部字段： 请求首部、通用首部、实用首部、其他组成；
 
 
 
 3. # 响应报文的结构
 
--  ## 由状态行、首部字段、空行、报文主体4部分组成。
+-  由**状态行、首部字段、空行、报文主体**4部分组成。
 
--  ## 状态行：HTTP版本+状态码组成；
+-  状态行：HTTP版本+状态码组成；
 
--  ## 其中首部字段包括：响应头部、通用头部、实用头部、其他组成。
+-  其中首部字段包括：响应首部、通用首部、实用首部、其他组成。
 
 
 
@@ -113,7 +113,50 @@
     |                     TRACE：追踪路径                      |                                                              |                                                              |
     |             CONNECT：要求用隧道协议连接代理              |                                                              |                                                              |
 
-    6.  # http是无状态协议&Cookie技术
+    
+
+6.  ## http长连接
+
+    在旧的http协议中，Web服务器与Web客户端之间的一个TCP连接只能为一次HTTP请求服务，即服务端每次处理完一个HTTP请求后，Web服务端就主动关闭TCP连接了。那么，在下次同一客户再次发送一个HTTP请求时，客户端与服务端需要重新建立一个新的TCP连接。所以，这会导致同一客户端的多个连续的HTTP请求不能共用一个TCP连接，这称为短连接。长连接，就是同一客户端的多个HTTP请求可以共用同一个TCP连接，极大地提高了每次HTTP请求处理的性能。在HTTP/1.1版本中，默认使用持久连接。
+
+    如下是访问 www.baidu.com 的请求报文首部信息：
+
+    ```http
+    GET http://www.baidu.com/index.html HTTP/1.1
+    Host: www.baidu.com
+    User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:13.0) Gecko/20100101 Firefox/13.0
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*; q=0.8
+    Accept-Language: ja,en-us;q=0.7,en;q=0.3
+    Accept-Encoding: gzip, deflate
+    DNT: 1
+    Connection: keep-alive
+    If-Modified-Since: Fri, 31 Aug 2007 02:02:20 GMT
+    If-None-Match: "45bae1-16a-46d776ac"
+    Cache-Control: max-age=0
+    ```
+
+    -   第一行是请求行。其中"GET"是请求方法，表示客户端向服务器请求获取资源。"http://www.baidu.com/index.html"是目标资源的URI，"HTTP/1.1" 表示当前使用HTTP协议的版本是1.1。
+    -   "Connection: keep-alive"  字段表示当前建立的连接是持久连接。若为close字段值，则表示处理完一个请求之后，立即关闭当前建立的连接。
+
+    
+
+    以下是之前请求访问的www.baidu.com返回的http响应报文头部：
+
+    ```http
+    HTTP/1.1 304 Not Modified
+    Date: Thu, 07 Jun 2012 07:21:36 GMT
+    Server: Apache
+    Connection: close
+    Etag: "45bae1-16a-46d776ac"
+    ```
+
+    -   第一行是状态码。"HTTP/1.1" 表示HTTP协议版本号。"304 Not Modified" 是状态码和原因短语。 
+
+        
+
+        
+
+7.  # http是无状态协议&Cookie技术
 
     -   ## http是无状态协议，它不会对之前发过的请求和响应的状态进行管理，即无法根据之前的状态进行本次的请求处理。例如：有登录认证的Web页面本身无法进行状态的管理(不记录已登录的状态)，那么每次跳转到新页面就要再次登录。
 
@@ -121,33 +164,36 @@
 
         1.  ### 请求报文（没有 Cookie 信息的状态）
 
+            ```http
             GET /reader/ HTTP/1.1
-            
             Host: hackr.jp
-            
-            *首部字段内没有Cookie的相关信息
-                    
+            ```
+        
+            ​        
         
         2.  ### 响应报文（服务器端生成 Cookie 信息）
         
+            ```http
             HTTP/1.1 200 OK
-        
             Date: Thu, 12 Jul 2012 07:12:20 GMT
-        
             Server: Apache
-            ＜Set-Cookie: sid=1342077140226724; path=/; expires=Wed,10-Oct-12 07:12:20 GMT＞
+            <Set-Cookie: sid=1342077140226724; path=/; expires=Wed,10-Oct-12 07:12:20 GMT>
             Content-Type: text/plain; charset=UTF-8
+            ```
         
             
         
         3.  ### 请求报文（自动发送保存着的 Cookie 信息）
         
+            ```http
             GET /image/ HTTP/1.1
             Host: hackr.jp
-        
             Cookie: sid=1342077140226724
+            ```
+            
+            
 
-7.  # HTTPS与HTTP
+8.  # HTTPS与HTTP
 
     1.  ## HTTP存在的问题
 

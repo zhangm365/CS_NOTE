@@ -24,3 +24,4 @@ on Vendors.vend_id = Products.vend_id;	  -- 等值联结
 ```
 
 ## 2. 外联结
+
