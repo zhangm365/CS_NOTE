@@ -32,7 +32,7 @@ on Vendors.vend_id = Products.vend_id;	  -- 联结条件
 
 内联结中将一个表中的行与另一个表中的相关的行相关联，但有时需要包含没有关联行的那些记录。外联结中包含了那些在相关表中没有关联的行。
 
->   在SELECT语句中加入**OUTER JOIN**关键字指定为外联结，同时必须使用**LEFT**或**RIGHT**关键字指定包含其所有行的表。RIGHT指出OUTER JOIN右边的表，而LEFT指出OUTER JOIN左边的表
+>   在SELECT语句中加入**OUTER JOIN**关键字指定为外联结，同时必须使用**LEFT**或**RIGHT**关键字指定包含其所有行的表。RIGHT指出OUTER JOIN右边的表，而LEFT指出OUTER JOIN左边的表。
 
 例子：对每个顾客下的订单进行计数，包括那些至今没有下单的顾客。
 

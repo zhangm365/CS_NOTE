@@ -78,13 +78,16 @@ class MyString
 int main()
 {
 
+    MyString str;
+    str.display();
+
     MyString str1("hello world!");
     str1.display();
     
     MyString str2(str1);
     str2.display();
 
-    MyString str3;
+    MyString str3 = "zhang";
 
     str3 = str1;
     

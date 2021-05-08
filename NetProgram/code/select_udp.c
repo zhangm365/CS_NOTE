@@ -148,7 +148,8 @@ int main(int argc, char *argv[])
 		{
 			perror("select error:");
 			return -1;
-		} else if (r == 0)
+		} 
+		else if (r == 0)
 		{
 			printf("timeout \n");
 			continue;
@@ -168,14 +169,11 @@ int main(int argc, char *argv[])
 
 
 	}
-	
-
-
-
-
 
 
 	close(sock);
 	return 0;
+
+	
 }
 

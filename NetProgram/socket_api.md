@@ -78,7 +78,7 @@ uint16_t ntohs(uint16_t netshort);	// The ntohs() function converts the unsigned
 
     ```c++
     #include <bits/socket.h>
-    struct socketaddr
+    struct sockaddr
     {
         sa_family_t sa_family;	// sa_family 是地址族类型(sa_family_t)变量. 通常取值为AF_UNIX, AF_INET, AF_INET6
         char sa_data[14];		// socket地址值

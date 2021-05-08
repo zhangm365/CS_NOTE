@@ -18,7 +18,7 @@
 
            /* Wait up to five seconds. */
 
-           tv.tv_sec = 10;
+           tv.tv_sec = 5;
            tv.tv_usec = 0;
 
            retval = select(1, &rfds, NULL, NULL, &tv);
@@ -27,7 +27,7 @@
            if (retval == -1)
                perror("select()");
            else if (retval)
-               printf("Data is available now.\n");
+               printf("retval = %d,Data is available now.\n", retval);
                /* FD_ISSET(0, &rfds) will be true. */
            else
                printf("No data within five seconds.\n");
