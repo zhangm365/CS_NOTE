@@ -2,7 +2,7 @@
 
 ## 1. select函数
 
-允许应用程序同时监听多个文件描述符，等到用于描述某类I/O操作的一个或多个fd "准备就绪"。
+允许应用程序同时监听多个文件描述符，等到用于描述某类I/O操作的一个或多个fd "准备就绪"。但是可以监听的fd最大数量为1024个。
 
 >   准备就绪：无阻塞地进行对应的I/O操作。
 
@@ -28,6 +28,9 @@
        *  a file descriptor becomes ready;
        *  the call is interrupted by a signal handler; or
        *  the timeout expires.
+       
+    If both fields of the timeval structure are zero, then select() returns immediately.  (This is useful for polling.)  If timeout is 		NULL (no timeout), select() can block indefinitely.
+    
 	@ return value：成功返回三个修改集合上的文件描述符总数;
 				   失败返回-1, 并设置errno
 	
@@ -38,12 +41,41 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 
 
 /*
-	@ 用于操作fd集合的一系列函数
+	@ 用于操作fd_set集合的一系列函数
 */
 void FD_CLR(int fd, fd_set *set);	// clear: 移除集合上的对应位fd
 int  FD_ISSET(int fd, fd_set *set);	// 判断一个集合上的位fd是否被修改返回
 void FD_SET(int fd, fd_set *set);	// 设置集合上的位fd
 void FD_ZERO(fd_set *set);			// 清除一个集合上所有位
+
+```
+
+## 2. poll函数
+
+poll()系统调用和select()功能类似，都是等待一个集合上是否有fd准备就绪。
+
+```c
+
+#define _GNU_SOURCE         /* See feature_test_macros(7) */
+
+#include <poll.h>
+
+int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+
+/*	arguement
+	@ fds：一个struct pollfd结构定义给出
+	@ nfds: 指定fds数组的大小
+	@ timeout：微妙级定时
+	Specifying a negative value in timeout means an infinite timeout.  Specifying a timeout of zero causes poll() to return immediately, 		even if no file descriptors are ready.
+
+*/
+struct pollfd 
+{
+    int   fd;         /* file descriptor */
+    short events;     /* requested events */
+    short revents;    /* returned events */
+};
+
 
 ```
 
