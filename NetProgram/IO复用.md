@@ -22,7 +22,7 @@
 	@ readfds : 指定可读fd集合;
 	@ writefds : 可写fd集合;
 	@ exceptfds : 异常fd集合;
-	@ timeout : 微妙级定时：设置一个间隔用于等待select阻塞等待一个fd是否就绪。
+	@ timeout : 微妙级定时：设置一个间隔用于select阻塞等待是否有监听的fd准备就绪。
 	The call will block until either:
 	
        *  a file descriptor becomes ready;
@@ -40,9 +40,9 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 /*
 	@ 用于操作fd集合的一系列函数
 */
-void FD_CLR(int fd, fd_set *set);	// clear: 移除一个集合上给定的fd
-int  FD_ISSET(int fd, fd_set *set);	// 判断一个集合上的fd是否被设置
-void FD_SET(int fd, fd_set *set);	// 设置集合上对应的fd
+void FD_CLR(int fd, fd_set *set);	// clear: 移除集合上的对应位fd
+int  FD_ISSET(int fd, fd_set *set);	// 判断一个集合上的位fd是否被修改返回
+void FD_SET(int fd, fd_set *set);	// 设置集合上的位fd
 void FD_ZERO(fd_set *set);			// 清除一个集合上所有位
 
 ```
