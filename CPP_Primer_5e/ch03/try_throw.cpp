@@ -1,6 +1,9 @@
 
 
-#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
 
 class Obj {
     public:
@@ -11,7 +14,7 @@ class Obj {
 void foo(int n)
 {
     Obj obj;
-    if (n == 42)
+    if (n == 42) 
         throw "life, the universe and everything";
 } 
 

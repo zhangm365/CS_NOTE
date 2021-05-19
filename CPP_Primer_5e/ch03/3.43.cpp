@@ -52,6 +52,17 @@ int main()
 
     cout << "---version 4---\n";
 
+    for( auto p = arr; p != arr+3; ++p )
+    {
+        for( auto q = *p; q != *p+4; ++q )
+        {
+            cout << *q << endl;
+        }
+    }
+    cout << endl;
+
+    cout << "---version 5 ---\n";
+
     for ( auto &row : arr )
     {
         for ( auto col : row )

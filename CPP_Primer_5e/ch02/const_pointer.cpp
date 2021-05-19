@@ -13,17 +13,19 @@ int main()
 
     int i = 42;
 
-    int *const pi = &i;
-    cout << "const pointer = " << *pi << endl;
-
+    int *const p1 = &i;
+    // *p1 = 3; // true
+    cout << "const pointer = " << *p1 << endl;
+    
     int i2 = 10;
-
-    //pi = &i2;   // error: assignment of read-only variable ‘pi’
+    const int *p2 = &i2;
+    
+    //p1 = &i2;   // error: assignment of read-only variable ‘pi’
     
     const int i3 = 60;
-    const int *const p2 = &i3; // p2是一个指向常量对象的常量指针 
+    const int *const p3 = &i3; // p2是一个指向常量对象的常量指针 
     
-    cout << "const const pointer = " << *p2 << endl;
+    cout << "const const pointer = " << *p3 << endl;
     
     return 0;
 
