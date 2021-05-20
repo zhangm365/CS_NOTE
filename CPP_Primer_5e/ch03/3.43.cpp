@@ -32,7 +32,7 @@ int main()
 
     cout << "---version 2---\n";
 
-    for( size_t i = 0; i !=3 ; ++i )
+    for( size_t i = 0; i != 3 ; ++i )
     {
         for( size_t j = 0; j != 4; ++j )
         {
