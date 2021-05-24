@@ -7,6 +7,8 @@
 int main()
 {
 
+    complex c;
+    complex c0();
     complex c1(2, -1);
     complex c2(3, 1);
     //c1 += c2;

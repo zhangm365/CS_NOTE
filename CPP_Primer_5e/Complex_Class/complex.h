@@ -5,7 +5,7 @@
 #define __COMPLEX_H__
 
 #include <iostream>
-// forward statement
+// forward declarations
 class complex;
 
 // global function
@@ -31,6 +31,8 @@ class complex
 
     private:
         double re, im;
+
+        // friend function
         friend complex& __doapl( complex *, const complex &r );
         friend complex& __doami( complex *, const complex &r );
         friend complex& __doaml( complex *, const complex &r );

@@ -23,7 +23,8 @@ class Sales_data
         void AddData(const Sales_data &rhs);  // 相同的isbn号的数据相加
         void PrintData();   // 输出数据
             
-
+    private:
+    
         std::string bookNo;  // isbn
         unsigned int units_sold; //销售数量 error initial:unsigned int units_sold(0)
         double revenue; // 总销售收入

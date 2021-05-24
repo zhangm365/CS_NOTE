@@ -1,0 +1,128 @@
+
+<!-- saved from url=(0069)http://pages.cs.wisc.edu/~remzi/Classes/537/Fall2013/Projects/p1.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Project 1: Linux/C + xv6 Intro</title> 
+</head> 
+
+<body text="black" bgcolor="white" link="#00aacc" vlink="#00aacc" alink="orange">
+
+<center><table><tbody><tr><td width="500pt">
+
+<center>
+<font color="#00aacc">
+<h1>Project 1: Warm-up Project</h1> 
+</font> 
+</center> 
+
+<h2>Important Dates</h2> 
+
+<p><b>Due:</b> Monday, 9/16, by 9pm (or so).</p> 
+
+<h2>Questions?</h2> 
+
+<p>Send questions to <b>537-help@cs.wisc.edu</b> (or, of course, visit us in
+person during office hours!). If the question is about your code, hand in all
+of your code and include your login in your email (you are free to modify the
+contents of your handin directory prior to the due date). Also include all
+other relevant information, such as cutting and pasting what you typed and the
+results from the screen. In general, the more information you give, the more
+we can help!</p> 
+
+<h2>Overview</h2> 
+
+<p>There are two parts to this project:
+</p><ul>
+<li><a href="http://pages.cs.wisc.edu/~remzi/Classes/537/Fall2013/Projects/p1a.html">Sorting:</a> to be done on the mumble lab, so you can
+learn more about programming in C on a typical UNIX-based platform (Linux)</li> 
+<li><a href="http://pages.cs.wisc.edu/~remzi/Classes/537/Fall2013/Projects/p1b.html">Kernel Intro:</a> to be done in our xv6 hacking
+environment, so you can learn more about what actually goes on in a real
+kernel.</li> 
+</ul> 
+<p></p> 
+
+<p>Click on the above links to learn more about what you should do. READ EACH
+CAREFULLY! Note: it will take a long time to read each and really make sure
+not to miss anything.</p> 
+
+<h2>Notes</h2> 
+
+<p>Before beginning, <b>read
+<a href="http://pages.cs.wisc.edu/~remzi/OSTEP/lab-tutorial.pdf">this tutorial.</a> </b> 
+It has some useful tips for programming in the C environment.</p> 
+
+<p>
+<b>Read K+R (the course textbook on C)</b> as it is a great
+introduction to the language. Familiarizing yourself with these topics will
+help you complete the programming projects:
+</p><ul>
+<li>character arrays, null terminated strings, character pointers (1.9, 5.5, 5.10)</li> 
+<li>pointer arithmetic (also called address arithmetic) (5.4)</li> 
+<li>using array notation on pointers and vice-versa (5.3)</li> 
+<li>pointer arrays (5.6)</li> 
+<li>function pointers (pointers to functions) (5.11, 5.12)</li> 
+<li>external declarations and the difference between definition and
+declaration (4.3, 4.4, A8)</li> 
+<li>preprocessor file inclusion (#include) and macro substitution (#define)
+(for constant style definitions) (4.5, 4.11)</li> 
+</ul> 
+These topics highlight the main differences between C and other languages like
+Java. They are generally what cause issues for programmers new to C.
+<p></p> 
+
+
+<p><b>This project, unlike all others this semester, must be done alone.</b> 
+Note that it is always OK to talk to others about your code, as well as
+help them debug their code. Copying code, however, is considered
+cheating. Don't do it! How will you learn that way? Read
+<a href="http://pages.cs.wisc.edu/~remzi/Classes/537/Fall2013/dontcheat.html">this</a> for more info on what is OK and what is not.</p> 
+
+<p>One last point about this project: if you don't have a partner for the next
+project, <b>we will use the score from this one to match you up with someone
+who performed similarly.</b> Thus, if you are looking for a project partner, your
+score on P1 is particularly important! Work hard and get a good score; there
+is no reason you should not be able to get 100 on this project.</p> 
+
+<h2>Handing It In</h2> 
+
+<p>For the C/Linux part of this project (sorting), you should turn in one
+file, called <code>fastsort.c</code> . We will compile it in the following way: </p><blockquote>
+<code>shell% gcc -O -Wall -o fastsort fastsort.c</code> </blockquote> so make sure it compiles in
+such a manner. You should copy this file into your handin directory into the
+subdirectory called <code>linux</code> .<p></p> 
+
+<p>The handin directory (for Section 2) is <code>~cs537-2/handin/login/p1</code> 
+where <code>login</code> is your login; for Section 3, it is the same but with a 3
+(not a 2). For example, Remzi's login is <code>remzi</code> , and thus he would copy
+his beautiful code into <code>~cs537-2/handin/remzi/p1</code> . Copying of these
+files is accomplished with the <code>cp</code> program, as follows: </p><blockquote><pre>shell%
+cp fastsort.c ~cs537-2/handin/remzi/p1/linux/</pre> </blockquote> <p></p> 
+
+<p>For the xv6 part of the project, copy all of your source files (but not .o
+files, please, or binaries!) into the <code>xv6/</code> subdirectory of your p1
+directory. A simple way to do this is to copy everything into the destination
+directory, then type <code>make</code> to make sure it builds, and then
+type <code>make clean</code> to remove unneeded files.</p> 
+
+<p>
+</p><blockquote><pre>shell% cp -r . ~cs537-2/handin/remzi/p1/xv6
+shell% cd ~cs537-2/handin/remzi/p1/xv6
+shell% make
+shell% make clean
+</pre> </blockquote> 
+
+<p></p> 
+
+<p>Finally, into your p1 directory, please make a README file. In there,
+describe what you did a little bit. The most important bit, at the top,
+however, should be the authorship of the project.</p> 
+
+
+
+</td> </tr> </tbody></table> </center>   
+
+
+
+
+
+
+</body></html>
