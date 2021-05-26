@@ -22,8 +22,9 @@ class Sales_data
 
     public:
         
-        Sales_data() = default;
-        Sales_data( const std::string &s ) : bookNo(s) {}
+        // Sales_data() = default;
+        // 含有默认实参的构造函数, 实际上也定义了默认构造函数
+        Sales_data( std::string s = "" ) : bookNo(s) { std::cout << "default\n";}
         Sales_data( const std::string &s, unsigned n, double p ) : bookNo(s), units_sold(n), revenue( n*p ) {}
         
         Sales_data( std::istream &is )

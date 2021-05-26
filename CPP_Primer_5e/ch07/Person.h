@@ -22,7 +22,7 @@ class Person
 
         Person() = default;
         Person( const std::string &n, const std::string &ad ) : name(n), address(ad) {}
-        Person( std::istream &is ) { return read( is, *this); }
+        explicit Person( std::istream &is ) { return read( is, *this); }
 
 
         std::string getName () const { return name; }
