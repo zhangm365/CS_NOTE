@@ -6,16 +6,18 @@ using namespace std;
 
 class Apple 
 { 
-public: 
-    static int i; 
+    public: 
+        Apple() 
+        { 
+            // Do nothing 
+        }; 
+    
+        static int i;   // 声明
 
-    Apple() 
-    { 
-        // Do nothing 
-    }; 
+
 }; 
 
- int Apple::i = 2;
+int Apple::i;
 
 int main() 
 { 
@@ -34,10 +36,13 @@ int main()
     
     const int j = 2;
     p = &j;
-    // int * const cp1 = &j;
+    // int * const cp1 = &j; // error
 
     cout << *p << " " << *cp << endl;
     // prints value of i 
-    cout << obj1.i<<" "<<obj2.i; 
+    cout << obj1.i << " " << obj2.i << endl; 
+    
+    return 0;
+
 
 } 
