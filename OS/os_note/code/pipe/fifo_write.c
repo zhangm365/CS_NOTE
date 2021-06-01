@@ -39,7 +39,13 @@ int main( int argc, char *argv[] )
         exit(EXIT_FAILURE);        
     }
     
-    write( fd, argv[1], strlen(argv[1]) );
+    printf("fd = %d\n", fd);
+    int w = write( fd, argv[1], strlen(argv[1]) );
+    
+    if( w > 0 )
+    {
+        fprintf(stdout, "send the %d bytes data : \n", w);
+    }
     close(fd);	// 
     
     return 0;
