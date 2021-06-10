@@ -62,10 +62,11 @@ std::ostream& print( std::ostream &out, const QueryResult &rhs )
         << ( rhs.nos->size() > 1 ? " times" : " time" ) << std::endl;
     
     
-    for( const auto &num : *rhs.nos )
+    // for( const auto &num : *rhs.nos )
+    for ( auto it = rhs.begin(); it != rhs.end(); ++it )
     {
-        ConstStrBlobPtr p(rhs.rfile, num);
-        out << "\t(line " << num + 1 << ") " 
+        ConstStrBlobPtr p(*rhs.get_file(), *it);
+        out << "\t(line " << *it + 1 << ") " 
             << p.deref() << std::endl;
     }
 

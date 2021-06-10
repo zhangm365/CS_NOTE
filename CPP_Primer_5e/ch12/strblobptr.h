@@ -61,7 +61,7 @@ class StrBlob
 
 };
 
-
+inline
 void StrBlob::pop_back()
 {
 
@@ -70,12 +70,14 @@ void StrBlob::pop_back()
 
 }
 
+inline
 std::string& StrBlob::front()
 {
     check(0, "front on the empty StrBlob");
     return data->front();
 }
 
+inline
 std::string& StrBlob::back()
 {
 
@@ -84,7 +86,7 @@ std::string& StrBlob::back()
 
 }
 
-
+inline
 const std::string& StrBlob::front() const
 {
     
@@ -92,6 +94,7 @@ const std::string& StrBlob::front() const
     return data->front();
 }
 
+inline
 const std::string& StrBlob::back() const
 {
     check(0, "back on the empty StrBlob");
@@ -99,7 +102,7 @@ const std::string& StrBlob::back() const
 
 }
 
-
+inline
 void StrBlob::check( size_type i, const std::string &msg ) const
 {
     if( i >= data->size() )
@@ -115,7 +118,7 @@ class StrBlobPtr
     public:
 
         StrBlobPtr() : curr(0) {}
-        StrBlobPtr( StrBlob &rhs, std::size_t sz = 0 ) : wptr(rhs.data), curr(sz) {}
+        StrBlobPtr( const StrBlob &rhs, std::size_t sz = 0 ) : wptr(rhs.data), curr(sz) {}
 
         bool operator!=(const StrBlobPtr& p) { return p.curr != this->curr; }
 
@@ -139,13 +142,13 @@ class StrBlobPtr
 
 };
 
-
+inline
 StrBlobPtr StrBlob::begin() 
 { 
     return StrBlobPtr(*this); 
 }
 
-
+inline
 StrBlobPtr StrBlob::end()
 {
     
@@ -158,7 +161,7 @@ StrBlobPtr StrBlob::end()
 /*
     由于 weak_ptr 不参与 shared_ptr 的引用计数, StrBlobPtr 所指向的vector 可能被释放了
 */
-
+inline
 std::shared_ptr<std::vector<std::string>> 
 StrBlobPtr::check( std::size_t i, const std::string &msg ) const
 {
@@ -179,7 +182,7 @@ StrBlobPtr::check( std::size_t i, const std::string &msg ) const
 
 }
 
-
+inline
 std::string& StrBlobPtr::deref() const
 {
 
@@ -189,7 +192,7 @@ std::string& StrBlobPtr::deref() const
 
 }
 
-
+inline
 StrBlobPtr& StrBlobPtr::incr()
 {
 

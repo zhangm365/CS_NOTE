@@ -1,9 +1,5 @@
 
 
-
-
-
-
 #ifndef _TEXTQUERY_H_V
 #define _TEXTQUERY_H_V
 
@@ -51,9 +47,26 @@ class QueryResult
 {
 
     public:
+
+        using QRIter = std::set<StrBlob::size_type>::iterator;
+
         QueryResult() {}
         QueryResult( const string &_word, shared_ptr<std::set<StrBlob::size_type>> _nos, StrBlob _input ) : word(_word), nos(_nos), rfile(_input)  {}
 
+        QRIter begin() const
+        {
+            return nos->begin();
+        }
+
+        QRIter end() const
+        {
+            return nos->end();
+        }
+
+        shared_ptr<StrBlob> get_file() const
+        {
+            return std::make_shared<StrBlob>(rfile);
+        }
 
     private:
         string word;    // 查询单词
