@@ -15,7 +15,8 @@
 
 #include <exception>
 
-class StrBlobPtr;
+// class StrBlobPtr;
+class ConstStrBlobPtr;
 
 class StrBlob
 {
@@ -24,10 +25,10 @@ class StrBlob
         typedef std::vector<std::string>::size_type size_type;
 
         // add for StrBlobPtr
-        friend class StrBlobPtr;
+        friend class ConstStrBlobPtr;
 
-        StrBlobPtr begin(); 
-        StrBlobPtr end() ;
+        ConstStrBlobPtr begin() const; 
+        ConstStrBlobPtr end() const;
 
 
         // 默认构造函数分配一个空std::vector
@@ -61,7 +62,7 @@ class StrBlob
 
 };
 
-
+inline
 void StrBlob::pop_back()
 {
 
@@ -70,12 +71,14 @@ void StrBlob::pop_back()
 
 }
 
+inline
 std::string& StrBlob::front()
 {
     check(0, "front on the empty StrBlob");
     return data->front();
 }
 
+inline
 std::string& StrBlob::back()
 {
 
@@ -84,7 +87,7 @@ std::string& StrBlob::back()
 
 }
 
-
+inline
 const std::string& StrBlob::front() const
 {
     
@@ -92,6 +95,7 @@ const std::string& StrBlob::front() const
     return data->front();
 }
 
+inline
 const std::string& StrBlob::back() const
 {
     check(0, "back on the empty StrBlob");
@@ -99,7 +103,7 @@ const std::string& StrBlob::back() const
 
 }
 
-
+inline
 void StrBlob::check( size_type i, const std::string &msg ) const
 {
     if( i >= data->size() )
@@ -109,19 +113,19 @@ void StrBlob::check( size_type i, const std::string &msg ) const
 
 
 
-class StrBlobPtr
+class ConstStrBlobPtr
 {
 
     public:
 
-        StrBlobPtr() : curr(0) {}
-        StrBlobPtr( StrBlob &rhs, std::size_t sz = 0 ) : wptr(rhs.data), curr(sz) {}
+        ConstStrBlobPtr() : curr(0) {}
+        ConstStrBlobPtr( const StrBlob &rhs, std::size_t sz = 0 ) : wptr(rhs.data), curr(sz) {}
 
-        bool operator!=(const StrBlobPtr& p) { return p.curr != this->curr; }
+        bool operator!=(ConstStrBlobPtr& p) { return p.curr != this->curr; }
 
         std::string& deref() const; // 解引用
 
-        StrBlobPtr& incr(); // 前缀递增
+        ConstStrBlobPtr& incr(); // 前缀递增
 
 
     private:
@@ -139,17 +143,18 @@ class StrBlobPtr
 
 };
 
-
-StrBlobPtr StrBlob::begin() 
+inline
+ConstStrBlobPtr StrBlob::begin() const
 { 
-    return StrBlobPtr(*this); 
+    return ConstStrBlobPtr(*this); 
 }
 
 
-StrBlobPtr StrBlob::end()
+inline
+ConstStrBlobPtr StrBlob::end() const
 {
     
-    auto ret = StrBlobPtr(*this, data->size());
+    auto ret = ConstStrBlobPtr(*this, data->size());
     return ret;
 
 }
@@ -159,8 +164,9 @@ StrBlobPtr StrBlob::end()
     由于 weak_ptr 不参与 shared_ptr 的引用计数, StrBlobPtr 所指向的vector 可能被释放了
 */
 
+inline
 std::shared_ptr<std::vector<std::string>> 
-StrBlobPtr::check( std::size_t i, const std::string &msg ) const
+ConstStrBlobPtr::check( std::size_t i, const std::string &msg ) const
 {
     // 判断 wptr 所指向的底层 vector 还存在吗？ 
     auto ret = wptr.lock();
@@ -179,8 +185,8 @@ StrBlobPtr::check( std::size_t i, const std::string &msg ) const
 
 }
 
-
-std::string& StrBlobPtr::deref() const
+inline
+std::string& ConstStrBlobPtr::deref() const
 {
 
     auto p = check( curr, "dereference past end" );
@@ -189,8 +195,8 @@ std::string& StrBlobPtr::deref() const
 
 }
 
-
-StrBlobPtr& StrBlobPtr::incr()
+inline
+ConstStrBlobPtr& ConstStrBlobPtr::incr()
 {
 
     check(curr, "increment past end of StrBlobPtr");

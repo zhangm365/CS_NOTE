@@ -18,14 +18,14 @@ class StrBlob
 {
 
     public:
-        typedef std::vector<std::string>::size_type ctype;
+        typedef std::vector<std::string>::size_type size_type;
 
         // 默认构造函数分配一个空std::vector
         StrBlob() : data(std::make_shared<std::vector<std::string>>()) {}
         
         StrBlob( std::initializer_list<std::string> ls) : data(std::make_shared<std::vector<std::string>>(ls)) {}
 
-        ctype size() const { return data->size(); }
+        size_type size() const { return data->size(); }
         bool empty() const { return data->empty(); }
 
         // 添加或删除元素
@@ -46,7 +46,7 @@ class StrBlob
         std::shared_ptr<std::vector<std::string>> data;
 
         // 检查如果data[i]不合法, 则抛出一个异常
-        void check( ctype i, const std::string &msg ) const;
+        void check( size_type i, const std::string &msg ) const;
 
 };
 
@@ -91,7 +91,7 @@ const std::string& StrBlob::back() const
 
 
 
-void StrBlob::check( ctype i, const std::string &msg ) const
+void StrBlob::check( size_type i, const std::string &msg ) const
 {
     if( i >= data->size() )
         throw std::out_of_range(msg);
