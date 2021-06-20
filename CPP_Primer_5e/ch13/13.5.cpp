@@ -37,7 +37,8 @@ class HasPtr
         }
 
         ~HasPtr()
-        {
+        { 
+            cout << "~ ctor\n";
             delete ps;
         }
 
@@ -57,11 +58,17 @@ int main()
     h1.print();
     HasPtr h2;
     
+    h2 = h1;
+
     HasPtr h3 = h2;
 
     h3 = h1;
     h3.print();
+    
+    HasPtr *p = new HasPtr;
 
+    delete p;
+    
     return 0;
 
 }

@@ -17,7 +17,7 @@ class String
         // 拷贝构造
         String( const String & );
 
-        // 拷贝复制
+        // 拷贝赋值
         String& operator = (const String &);
         ~String();
 
