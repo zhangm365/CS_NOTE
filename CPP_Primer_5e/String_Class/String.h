@@ -34,6 +34,8 @@ String::String( const char *data )
     {
         p_data = new char[strlen(data) + 1];
         strcpy(p_data, data);
+        
+
     }
     else
     {
