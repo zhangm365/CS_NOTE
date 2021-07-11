@@ -1,4 +1,8 @@
+[toc]
+
 # SQL语句执行过程
+
+-----------------------------
 
 ## 1. MySQL基本框架
 
@@ -10,7 +14,7 @@
 
 
 
-![mysql逻辑架构](sql.png)
+![mysql逻辑架构](.\pictures\sql.png)
 
 
 
@@ -48,7 +52,7 @@ SELECT * FROM T WHERE ID = 5;
 
 ## 2. SQL 分组
 
-​	WHERE和HAVING：WHERE过滤行，HAVING过滤分组；即WHERE是**行级过滤**，HAVING是**组级过滤**。
+​	`WHERE` 和 `HAVING` ：``WHERE` 过滤行，`HAVING` 过滤分组；即`WHERE`是**行级过滤**，`HAVING`是**组级过滤**。
 
 
 

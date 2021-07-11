@@ -59,13 +59,12 @@ int main()
     HasPtr h2;
     
     h2 = h1;
-
     HasPtr h3 = h2;
 
     h3 = h1;
     h3.print();
     
-    HasPtr *p = new HasPtr;
+    HasPtr *p = new HasPtr("world");
 
     delete p;
     

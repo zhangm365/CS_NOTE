@@ -19,9 +19,11 @@ class numbered
         }
 
         ~numbered() = default;
-    
+        
     int mysn;
     static int unique;
+
+
 };
 
 int numbered::unique = 10;
@@ -37,6 +39,7 @@ void rf(const numbered &s ) {
 
 int main()
 {
+    cout << sizeof(numbered) << endl;
     numbered a, b = a, c = b;
     f(a);
     f(b);
