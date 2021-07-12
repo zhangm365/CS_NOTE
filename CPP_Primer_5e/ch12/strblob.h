@@ -41,6 +41,10 @@ class StrBlob
         std::string& back();
         const std::string& back() const;
 
+        // add for 13.26 execise
+        StrBlob( const StrBlob &rhs ) : data( std::make_shared<std::vector<std::string>>(*rhs.data) ){ }
+        StrBlob &operator= ( const StrBlob & );
+
     private:
 
         std::shared_ptr<std::vector<std::string>> data;
@@ -49,6 +53,16 @@ class StrBlob
         void check( size_type i, const std::string &msg ) const;
 
 };
+
+
+inline 
+StrBlob& StrBlob::operator=( const StrBlob &rhs )
+{
+
+    data = std::make_shared<std::vector<std::string>>(*rhs.data);
+    return *this;
+
+}
 
 
 void StrBlob::pop_back()
