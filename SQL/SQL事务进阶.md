@@ -99,7 +99,6 @@ insert into t(id, k) values(1,1),(2,2);
 -   版本未提交，不可见；
 -   版本已提交，但是在视图数组创建后提交的，不可见；
 -   版本已提交，但是在视图数组创建前提交的，可见。
-    
 
 ### 2.2 更新逻辑
 
@@ -117,11 +116,14 @@ insert into t(id, k) values(1,1),(2,2);
 
 ## 3 . 锁定读和一致性非锁定读
 
-锁定读：一个事务中，默认的 select 操作是不加锁的。但是由两个例外情况：select ... lock in share mode 和 select ... for update 。
+锁定读：一个事务中，默认的 `select` 语句执行的是快照读，读的是数据库的快照版本，是不加锁的。
+但是有两个例外情况：**`select ... lock in share mode`** 和 **`select ... for update`** 。
 
-select ... lock in share mode ：给表或记录加共享锁，其他事务只能读不能修改，直至当前事务提交；
+`select ... lock in share mode` ：给表或记录加共享锁，其他事务只能读不能修改，直至当前事务提交；
 
-select ... for update ：更 update 操作加锁一样的情况。
+`select ... for update` ：给记录加排他锁，和 `update` 、`delete` 等操作一样的加锁规则。
 
-一致性非锁定读：InnoDB 用多版本来提供查询数据库在某个时间点的快照。默认 select 操作就是一致性非锁定读。
+因此，当执行上述两个 `select` 语句时，执行的是当前读，读取数据库中对应记录的最新版本。
+
+一致性非锁定读：`InnoDB` 用多版本来提供查询数据库在某个时间点的快照。默认 `select` 操作就是一致性非锁定读。
 
