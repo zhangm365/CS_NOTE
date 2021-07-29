@@ -75,7 +75,7 @@
 
 `select` 执行语句查询时间可能很慢。例如下面两个语句的执行过程：
 
-`select * from t where id=1;` 一致性读，是快照读
+`select * from t where id=1;` 一致性读，是快照读，不加锁。
 `select * from t where id=1 lock in share mode;` 是当前读
 
 ![](.\pictures\19_11.png)

@@ -1,8 +1,11 @@
 
 
+
+
+
 #include <iostream>
 
-#include "bulk_quote.h"
+#include "bulk_quote_v2.h"
 
 using namespace std;
 
@@ -25,19 +28,16 @@ int main()
 
     Bulk_quote B1( string("8-90-3421224389"), 25.99, 10, 0.2 );
     print_price(cout, B1, 12);
-    cout << B1.net_price(12) << endl;
     
     Quote Q3 = B1;
     print_price(cout, Q3, 12);
     
 
     Quote *Q4 = &B1;
-    Q4->net_price(12);
+    // Q4->net_price(12);
     print_price(cout, *Q4, 12);
     
-
-    Q1.debug();
-    Q4->debug();
+    // Disc_quote D1;  // error: cannot declare variable ‘D1’ to be of abstract type ‘Disc_quote’
 
     return 0;
 

@@ -1,8 +1,18 @@
-# http报文：使用http协议交互的信息(应用层)
 
 
 
-1. # **http报文**由报文首部、空行、报文主体组成。
+
+[toc]
+
+# HTTP 协议与报文
+
+-----
+
+
+
+## 1. `HTTP`报文组成部分
+
+`http` 报文是在应用层使用 `http` 协议交互的信息载体。它由 **报文首部、空行、报文主体** 三部分组成。
 
 -  报文首部：服务端或客户端需处理的请求或响应的内容及属性；
 
@@ -10,15 +20,11 @@
 
 -  报文主体：应被发送的内容；
 
-    
+  请求端(客户端)发出的 `http` 报文称为请求报文，响应端(服务端)返回的 `http` 报文称为响应报文。
 
-    ## 请求端(客户端)发出的http报文称为请求报文，响应端(服务端)返回的http报文称为响应报文。
+## 2. 请求报文的结构
 
-    
-
-2. # 请求报文的结构
-
--  由**请求行、首部字段、空行、报文主体**4部分组成；
+-  由 **请求行、首部字段、空行、报文主体** 四部分组成；
 
 -  请求行：方法+URI+HTTP版本组成；
 
@@ -26,9 +32,9 @@
 
 
 
-3. # 响应报文的结构
+## 3. 响应报文的结构
 
--  由**状态行、首部字段、空行、报文主体**4部分组成。
+-  由 **状态行、首部字段、空行、报文主体** 四部分组成。
 
 -  状态行：HTTP版本+状态码组成；
 
@@ -36,10 +42,11 @@
 
 
 
-4. # http状态码
--  ## http状态码负责描述客户端http请求的返回结果、标记服务端的处理是否正常、通知出现的错误等工作
+## 4. `HTTP` 状态码
 
--  ## 状态码的类别
+-  `HTTP` 状态码负责描述客户端 `HTTP` 请求的返回结果、标记服务端的处理是否正常、通知出现的错误等工作。
+
+-  状态码的类别
 
 | 编号 |               类别               |          原因短语          |
 | :--: | :------------------------------: | :------------------------: |
@@ -49,7 +56,7 @@
 | 4XX  | Client Error（客户端错误状态码） |     服务器无法处理请求     |
 | 5XX  | Server Error（服务器错误状态码） |     服务器处理请求出错     |
 
--   ##  2XX 成功
+-   2XX 成功
 
     2XX的响应结果表示请求被服务器正常处理了
 
@@ -61,7 +68,7 @@
 
     
 
--   ## 3XX 重定向
+-   3XX 重定向
 
     3XX 响应结果表明浏览器需要执行某些特殊处理以正确处理请求
 
@@ -75,7 +82,7 @@
 
     
 
--   ## 4XX 客户端错误
+-   4XX 客户端错误
 
     4XX表示客户端是发生错误的原因所在
 
@@ -88,7 +95,7 @@
 
 
 
--   ## 5XX 服务端错误
+-   5XX 服务端错误
 
     5XX表示服务端本身发生错误
 
@@ -99,147 +106,136 @@
 
      
 
+## 5. HTTP方法 (`HTTP/1.1`)
 
-5.  # HTTP方法(http/1.1)
+|                           方法                           |                             请求                             |                             响应                             |
+| :------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|                      GET：获取资源                       |       GET  /index.html  HTTP/1.1<br>Host: www.hackr.jp       |                    返回index.html页面资源                    |
+|                    POST：传送实体主体                    | POST  /submit.cgi  HTTP/1.1<br>Host: www.hackr.jp<br>Content-length: 1560(字节的数据) |                 返回submit.cgi接受数据的结果                 |
+|                      PUT：传输文件                       | PUT  /example.html  HTTP/1.1<br>Host: www.hackr.jp<br>Content-Type: text/html<br>Content-Length: 1560（字节的数据） | 响应返回状态码 204 No Content（比如 ：该 html 已存在于服务器上） |
+|  HEAD：获取报文首部<br>和GET方法类似，但不返回报文主体   |      HEAD  /index.html  HTTP/1.1<br/>Host: www.hackr.j       |                 返回index.html有关的响应首部                 |
+|            DELETE：删除文件<br>和PUT方法相反             |                                                              |                                                              |
+| OPTIONS：支持询问的方法<br>查询针对请求URI资源支持的方法 |           OPTIONS * HTTP/1.1<br>Host: www.hackr.jp           | HTTP/1.1  200  OK<br>Allow: GET, POST, HEAD, OPTIONS（返回服务器支持的方法） |
+|                     TRACE：追踪路径                      |                                                              |                                                              |
+|             CONNECT：要求用隧道协议连接代理              |                                                              |                                                              |
 
-    |                           方法                           |                             请求                             |                             响应                             |
-    | :------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-    |                      GET：获取资源                       |       GET  /index.html  HTTP/1.1<br>Host: www.hackr.jp       |                    返回index.html页面资源                    |
-    |                    POST：传送实体主体                    | POST  /submit.cgi  HTTP/1.1<br>Host: www.hackr.jp<br>Content-length: 1560(字节的数据) |                 返回submit.cgi接受数据的结果                 |
-    |                      PUT：传输文件                       | PUT  /example.html  HTTP/1.1<br>Host: www.hackr.jp<br>Content-Type: text/html<br>Content-Length: 1560（字节的数据） | 响应返回状态码 204 No Content（比如 ：该 html 已存在于服务器上） |
-    |  HEAD：获取报文首部<br>和GET方法类似，但不返回报文主体   |      HEAD  /index.html  HTTP/1.1<br/>Host: www.hackr.j       |                 返回index.html有关的响应首部                 |
-    |            DELETE：删除文件<br>和PUT方法相反             |                                                              |                                                              |
-    | OPTIONS：支持询问的方法<br>查询针对请求URI资源支持的方法 |           OPTIONS * HTTP/1.1<br>Host: www.hackr.jp           | HTTP/1.1  200  OK<br>Allow: GET, POST, HEAD, OPTIONS（返回服务器支持的方法） |
-    |                     TRACE：追踪路径                      |                                                              |                                                              |
-    |             CONNECT：要求用隧道协议连接代理              |                                                              |                                                              |
 
-    
 
-6.  ## http长连接
+### 5.1 `HTTP` 长连接
 
-    在旧的http协议中，Web服务器与Web客户端之间的一个TCP连接只能为一次HTTP请求服务，即服务端每次处理完一个HTTP请求后，Web服务端就主动关闭TCP连接了。那么，在下次同一客户再次发送一个HTTP请求时，客户端与服务端需要重新建立一个新的TCP连接。所以，这会导致同一客户端的多个连续的HTTP请求不能共用一个TCP连接，这称为短连接。长连接，就是同一客户端的多个HTTP请求可以共用同一个TCP连接，极大地提高了每次HTTP请求处理的性能。在HTTP/1.1版本中，默认使用持久连接。
+在旧的`HTTP` 协议中，Web服务器与Web客户端之间的一个TCP连接只能为一次HTTP请求服务，即服务端每次处理完一个HTTP请求后，Web服务端就主动关闭TCP连接了。那么，在下次同一客户再次发送一个HTTP请求时，客户端与服务端需要重新建立一个新的TCP连接。所以，这会导致同一客户端的多个连续的HTTP请求不能共用一个TCP连接，这称为短连接。长连接，就是同一客户端的多个HTTP请求可以共用同一个TCP连接，极大地提高了每次HTTP请求处理的性能。在HTTP/1.1版本中，默认使用持久连接。
 
-    如下是访问 www.baidu.com 的请求报文首部信息：
+如下是访问 www.baidu.com 的请求报文首部信息：
+
+```http
+GET http://www.baidu.com/index.html HTTP/1.1
+Host: www.baidu.com
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:13.0) Gecko/20100101 Firefox/13.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*; q=0.8
+Accept-Language: ja,en-us;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Connection: keep-alive
+If-Modified-Since: Fri, 31 Aug 2007 02:02:20 GMT
+If-None-Match: "45bae1-16a-46d776ac"
+Cache-Control: max-age=0
+```
+
+-   第一行是请求行。其中"GET"是请求方法，表示客户端向服务器请求获取资源。"http://www.baidu.com/index.html"是目标资源的URI，"HTTP/1.1" 表示当前使用HTTP协议的版本是1.1。
+-   "Connection: keep-alive"  字段表示当前建立的连接是持久连接。若为close字段值，则表示处理完一个请求之后，立即关闭当前建立的连接。
+
+
+
+以下是之前请求访问的www.baidu.com返回的http响应报文头部：
+
+```http
+HTTP/1.1 304 Not Modified
+Date: Thu, 07 Jun 2012 07:21:36 GMT
+Server: Apache
+Connection: close
+Etag: "45bae1-16a-46d776ac"
+```
+
+-   第一行是状态码。"HTTP/1.1" 表示HTTP协议版本号。"304 Not Modified" 是状态码和原因短语。 
+
+
+
+## 6. http是无状态协议&Cookie技术
+
+http是无状态协议，它不会对之前发过的请求和响应的状态进行管理，即无法根据之前的状态进行本次的请求处理。例如：有登录认证的Web页面本身无法进行状态的管理(不记录已登录的状态)，那么每次跳转到新页面就要再次登录。
+
+为解决上述问题，引入Cookie技术。Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态。例如以下场景：
+
+1.  请求报文（没有 Cookie 信息的状态）
 
     ```http
-    GET http://www.baidu.com/index.html HTTP/1.1
-    Host: www.baidu.com
-    User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:13.0) Gecko/20100101 Firefox/13.0
-    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*; q=0.8
-    Accept-Language: ja,en-us;q=0.7,en;q=0.3
-    Accept-Encoding: gzip, deflate
-    DNT: 1
-    Connection: keep-alive
-    If-Modified-Since: Fri, 31 Aug 2007 02:02:20 GMT
-    If-None-Match: "45bae1-16a-46d776ac"
-    Cache-Control: max-age=0
+    GET /reader/ HTTP/1.1
+    Host: hackr.jp
     ```
 
-    -   第一行是请求行。其中"GET"是请求方法，表示客户端向服务器请求获取资源。"http://www.baidu.com/index.html"是目标资源的URI，"HTTP/1.1" 表示当前使用HTTP协议的版本是1.1。
-    -   "Connection: keep-alive"  字段表示当前建立的连接是持久连接。若为close字段值，则表示处理完一个请求之后，立即关闭当前建立的连接。
+    ​        
 
-    
-
-    以下是之前请求访问的www.baidu.com返回的http响应报文头部：
+2.  响应报文（服务器端生成 Cookie 信息）
 
     ```http
-    HTTP/1.1 304 Not Modified
-    Date: Thu, 07 Jun 2012 07:21:36 GMT
+    HTTP/1.1 200 OK
+    Date: Thu, 12 Jul 2012 07:12:20 GMT
     Server: Apache
-    Connection: close
-    Etag: "45bae1-16a-46d776ac"
+    <Set-Cookie: sid=1342077140226724; path=/; expires=Wed,10-Oct-12 07:12:20 GMT>
+    Content-Type: text/plain; charset=UTF-8
     ```
 
-    -   第一行是状态码。"HTTP/1.1" 表示HTTP协议版本号。"304 Not Modified" 是状态码和原因短语。 
+    
 
-        
+3.  请求报文（自动发送保存着的 Cookie 信息）
 
-        
-
-7.  # http是无状态协议&Cookie技术
-
-    -   ## http是无状态协议，它不会对之前发过的请求和响应的状态进行管理，即无法根据之前的状态进行本次的请求处理。例如：有登录认证的Web页面本身无法进行状态的管理(不记录已登录的状态)，那么每次跳转到新页面就要再次登录。
-
-    -   ## 为解决上述问题，引入Cookie技术。Cookie技术通过在请求和响应报文中写入Cookie信息来控制客户端的状态。例如以下场景：
-
-        1.  ### 请求报文（没有 Cookie 信息的状态）
-
-            ```http
-            GET /reader/ HTTP/1.1
-            Host: hackr.jp
-            ```
-        
-            ​        
-        
-        2.  ### 响应报文（服务器端生成 Cookie 信息）
-        
-            ```http
-            HTTP/1.1 200 OK
-            Date: Thu, 12 Jul 2012 07:12:20 GMT
-            Server: Apache
-            <Set-Cookie: sid=1342077140226724; path=/; expires=Wed,10-Oct-12 07:12:20 GMT>
-            Content-Type: text/plain; charset=UTF-8
-            ```
-        
-            
-        
-        3.  ### 请求报文（自动发送保存着的 Cookie 信息）
-        
-            ```http
-            GET /image/ HTTP/1.1
-            Host: hackr.jp
-            Cookie: sid=1342077140226724
-            ```
-            
-            
-
-8.  # HTTPS与HTTP
-
-    1.  ## HTTP存在的问题
-
-        -   通信使用明文(不加密)，内容可能被窃听；
-        -   不验证通信方的身份，因此有可能遭遇伪装；
-        -   无法验证报文的完整性，所以有可能被篡改。
-
-    2.  ## HTTPS = HTTP+加密+认证+完整性保护
-
-        HTTPS在HTTP协议的基础上使用SSL/TLS协议构建可以加密传输、身份认证的网络协议。因此，https协议可以建立信息安全通道，保证数据传输的可靠性；同时可以确保网站的真实性；SSL是当今世界应用最广泛的网络安全技术。
-
-    3.  ## 对称加密和非对称加密
-
-        -   对称加密：加密和解密使用同一个密钥的方式；
-
-        -   非对称加密：包含私有密钥(private key)和公有密钥(public key)两个密钥。私有密钥是不能让任何人知道的，公有密钥可以随意发布。
-
-        -   非对称加密方式：发送密文的一方可以使用对方的公有密钥加密，对方收到被加密的信息后，再使用自己的私有密钥进行解密。
-
-    4.  ## HTTPS采用对称加密和非对称加密的混合机制
-
-        加密过程：
-
-        1.  使用非对称加密方式安全地交换稍后使用的对称密钥中的密钥；
-        2.  在确保对称密钥安全的情况下，使用对称密钥加密方式进行通信；
-
-        
-
-    5.  ## 验证公开密钥正确性的证书
-
-        如何验证服务器发回的公开密钥是正确的？
-
-        1.  可由**数字证书认证机构**(CA)及其相关机构颁发的公开密钥证书。服务器的人员向CA提出公开密钥的申请，CA在验证申请者的身份后，对已申请的公钥做数字签名，并将该公钥放入公钥证书后绑定在一起，即数字证书包括：服务器的公钥和CA的数字签名。
-
-        2.  服务器会将这份有CA颁发的公钥证书发送给客户端，以进行非对称密钥加密通信。
-
-        3.  接到证书的客户端可使用CA的公开密钥，对证书上的数字签名进行验证，一旦验证通过，即明确两件事：
-
-            3.1 认证服务器的公开密钥是真实有效的数字证书认证机构；
-
-            3.2 服务器的公开密钥是真实可靠的。
-
-        4.  之后客户端可以使用服务器的公开密钥进行报文加密通信。
-
-    6.  
+    ```http
+    GET /image/ HTTP/1.1
+    Host: hackr.jp
+    Cookie: sid=1342077140226724
+    ```
 
     
 
-    
+## 7. HTTPS与HTTP
+
+### 7.1 HTTP存在的问题
+
+-   通信使用明文(不加密)，内容可能被窃听；
+-   不验证通信方的身份，因此有可能遭遇伪装；
+-   无法验证报文的完整性，所以有可能被篡改。
+
+### 7.2 HTTPS = HTTP+加密+认证+完整性保护
+
+`HTTPS` 在`HTTP`协议的基础上使用SSL/TLS协议构建可以加密传输、身份认证的网络协议。因此，`https`协议可以建立信息安全通道，保证数据传输的可靠性；同时可以确保网站的真实性；SSL是当今世界应用最广泛的网络安全技术。
+
+### 7.3 对称加密和非对称加密
+
+-   对称加密：加密和解密使用同一个密钥的方式；
+
+-   非对称加密：包含私有密钥(private key)和公有密钥(public key)两个密钥。私有密钥是不能让任何人知道的，公有密钥可以随意发布。
+
+-   非对称加密方式：发送密文的一方可以使用对方的公有密钥加密，对方收到被加密的信息后，再使用自己的私有密钥进行解密。
+
+### 7.4 `HTTPS` 采用对称加密和非对称加密的混合机制
+
+加密过程：
+
+1.  使用非对称加密方式安全地交换稍后使用的对称密钥中的密钥；
+2.  在确保对称密钥安全的情况下，使用对称密钥加密方式进行通信；
+
+### 7.5 验证公开密钥正确性的证书
+
+如何验证服务器发回的公开密钥是正确的？
+
+1.  可由**数字证书认证机构**(CA)及其相关机构颁发的公开密钥证书。服务器的人员向CA提出公开密钥的申请，CA在验证申请者的身份后，对已申请的公钥做数字签名，并将该公钥放入公钥证书后绑定在一起，即数字证书包括：服务器的公钥和CA的数字签名。
+
+2.  服务器会将这份有CA颁发的公钥证书发送给客户端，以进行非对称密钥加密通信。
+
+3.  接到证书的客户端可使用CA的公开密钥，对证书上的数字签名进行验证，一旦验证通过，即明确两件事：
+
+    3.1 认证服务器的公开密钥是真实有效的数字证书认证机构；
+
+    3.2 服务器的公开密钥是真实可靠的。
+
+4.  之后客户端可以使用服务器的公开密钥进行报文加密通信。
