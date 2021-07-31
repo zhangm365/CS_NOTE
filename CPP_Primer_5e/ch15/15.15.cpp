@@ -1,8 +1,5 @@
 
 
-
-
-
 #include <iostream>
 
 #include "bulk_quote_v2.h"
@@ -38,7 +35,7 @@ int main()
     print_price(cout, *Q4, 12);
     
     // Disc_quote D1;  // error: cannot declare variable ‘D1’ to be of abstract type ‘Disc_quote’
-
+    
     return 0;
 
 }

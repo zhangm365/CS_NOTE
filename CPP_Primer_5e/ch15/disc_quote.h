@@ -6,7 +6,7 @@
 
 #include "quote.h"
 
-
+// 抽象类
 class Disc_quote : public Quote
 {
 

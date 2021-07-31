@@ -44,25 +44,30 @@
 
 ### 2.2 row-based 格式
 
-`row` 格式是基于表中哪个记录被修改的日志格式。
-如下是这种格式的日志文件内容（ `insert` 操作 ）：
+`row` 格式是基于表中哪个记录被修改的日志格式。参数 `binlog_row_image=FULL` ：表示开启全部镜像。
+如下是这种格式的日志文件内容（ `insert into t_24 values(4, 4, '2018-11-10');` 语句执行结果 ）：
 
 ![](.\pictures\24_2.png)
 
-可以看出，`row` 记录的不是原始的 `SQL` 语句，对应的语句替换成了两个事件类型：`Table_map` 和 `Write_rows` 。`Table_map`：表示操作的数据库 `sql_test` 中的表 `t_24`。而  `Write_rows`：用于定义写入的行为。
+可以看出，`row` 记录的不是原始的 `SQL` 语句，对应的语句替换成了两个事件类型：`Table_map` 和 `Write_rows` 。`Table_map`：表示操作的数据库 `sql_test` 中的表 `t_24`。而  `Write_rows`：用于定义写入日志的行为。
 
-可以使用 `mysqlbinlog` 工具显示解析 `binlog` 文件中对应的内容。
-`mysqlbinlog -vv /var/lib/mysql/binlog.000155 --start-position=3151`，如下：（`insert into t_24 values(4, 4, '2018-11-10')`）的执行语句
+可以使用 `mysqlbinlog` 工具显示解析 `binlog` 文件中对应的内容。执行以下命令
+`sudo mysqlbinlog -vv /var/lib/mysql/binlog.000155 --start-position=3151`，如下（`Write_rows`）：
 
 ![](E:\CS_NOTE_SELF\CS_NOTE\SQL\pictures\24_3.png) 
 
-以下是 `update t_24 set a = 888 where id = 4;` 语句操作的 `row` 格式的日志文件内容：
+>   参数 `--start-position` 来指定从哪个位置解析日志文件。之前的图中显示，这个执行语句的 `binlog` 日志是从 `3151` 这个位置开始的。 
+>   参数 `-vv` 具体显示解析的内容 ( `@1=4、@2=4` 这些值 )。
+
+以下是 `update t_24 set a = 888 where id = 4;` 语句操作的 `row` 格式的日志文件内容（`Update_rows`）：
 
 ![](.\pictures\24_4.png)
 
-参数 `--start-position` 来指定从哪个位置解析日志文件。之前的图中显示，这个执行语句的 `binlog` 日志是从 `3151` 这个位置开始的。 
-参数 `-vv` 具体显示解析的内容 ( `@1=4、@2=4` 这些值 )。
-因此，从 `row-based` 格式的 `binlog` 文件中，可以看出 `binlog` 里记录的是真是改变行的主键 `id`。
+以下是 `delete from t_24 where a >=4 and t_modified <= '2018-11-10' limit 1;` 语句操作的 `row` 日志文件内容（`Delete_rows`）：
+
+![](.\pictures\24_5.png)
+
+综上，从 `row-based` 格式的 `binlog` 文件中，可以看出 `binlog` 里记录的是对应执行语句修改的全字段信息。
 **这样就可以保证主备库修改数据的一致性**。
 
 ### 2.3 mixed-based 格式

@@ -20,7 +20,7 @@ class Bulk_quote : public Disc_quote
             std::cout << "Bulk_quote net_price" << "\n";
             if( cnt >= min_qty )
             {
-                return cnt * ( 1- discount ) * price;
+                return cnt * ( 1-discount ) * price;
             }
             else
             {
