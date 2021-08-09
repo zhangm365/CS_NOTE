@@ -27,7 +27,7 @@ mysql> show variables like 'innodb_file%';
 
 ```
 
-## 
+
 
 ## 2. 数据删除流程
 

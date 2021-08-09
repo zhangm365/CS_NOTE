@@ -75,10 +75,3 @@ insert into t values(0,0,0),(5,5,5),
 `lock_mode X waiting` 表示`next-key lock`；
 `lock_mode X locks rec but not gap`是只有行锁；
 `locks gap before rec`，就是只有间隙锁；
-
-
-
-
-
-
-
