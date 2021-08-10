@@ -47,5 +47,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 ### 1.4 查看慢查询日志内容
 
-`sudo cat /var/lib/mysql/ubuntu-slow.log `
+`sudo cat /var/lib/mysql/ubuntu-slow.log ` 
+
+
 

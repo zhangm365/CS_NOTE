@@ -76,11 +76,12 @@ void swap( Message &lhs, Message &rhs )
     using std::swap;
 
     // 1. 先删除
+
     lhs.remove_from_Folders();
     
     rhs.remove_from_Folders();
     
-    // 2. 交换内容
+    // 2. 交换内容  
     swap( lhs.folders, rhs.folders );   // swap( set&, set& )
     swap( lhs.contents, rhs.contents ); // swap( string&, string& )
 
@@ -100,35 +101,36 @@ void Message::debug_print()
 
 
 ///////***********Folder implement**********************///////////
-
+/*
 void swap( Folder &lhs, Folder &rhs )
 {
 
     using std::swap;
 
-    for( auto m : lhs.msgs )
-        m->remFldr(&lhs); 
+    // for( auto m : lhs.msgs )
+    //     m->remFldr(&lhs); 
+
+    // for( auto m : rhs.msgs )
+    //     m->remFldr(&rhs);
     
-    // lhs.remove_from_Messages();
-    // rhs.remove_from_Messages();
+    
+    lhs.remove_from_Messages();
+    rhs.remove_from_Messages();
 
-
-    for( auto m : rhs.msgs )
-        m->remFldr(&rhs);
 
     swap( lhs.msgs, rhs.msgs );
 
-    for( auto m : lhs.msgs )
-        m->addFldr(&lhs);
+    // for( auto m : lhs.msgs )
+    //     m->addFldr(&lhs);
     
-    for( auto m : rhs.msgs )
-        m->addFldr(&rhs);
+    // for( auto m : rhs.msgs )
+    //     m->addFldr(&rhs);
 
-    // lhs.add_to_Messages(lhs);
-    // rhs.add_to_Messages(rhs);
+    lhs.add_to_Messages(lhs);
+    rhs.add_to_Messages(rhs);
 
 }
-
+*/
 
 
 void Folder::add_to_Messages( const Folder &f )

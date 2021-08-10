@@ -48,15 +48,6 @@ SELECT * FROM T WHERE ID = 5;
 
 
 
-
-
 ## 2. SQL 分组
 
 ​	`WHERE` 和 `HAVING` ：``WHERE` 过滤行，`HAVING` 过滤分组；即`WHERE`是**行级过滤**，`HAVING`是**组级过滤**。
-
-
-
-
-
-
-

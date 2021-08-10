@@ -75,3 +75,17 @@ insert into t values(0,0,0),(5,5,5),
 `lock_mode X waiting` 表示`next-key lock`；
 `lock_mode X locks rec but not gap`是只有行锁；
 `locks gap before rec`，就是只有间隙锁；
+`SELECT ENGINE_TRANSACTION_ID, OBJECT_NAME, INDEX_NAME, LOCK_TYPE, LOCK_MODE, LOCK_STATUS, LOCK_DATA FROM performance_schema.data_locks;`
+
+```mysql
+mysql> SELECT ENGINE_TRANSACTION_ID, OBJECT_NAME, INDEX_NAME, LOCK_TYPE, LOCK_MODE, LOCK_STATUS, LOCK_DATA FROM performance_schema.data_locks;
++-----------------------+-------------+------------+-----------+---------------+-------------+-----------+
+| ENGINE_TRANSACTION_ID | OBJECT_NAME | INDEX_NAME | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA |
++-----------------------+-------------+------------+-----------+---------------+-------------+-----------+
+|               4975165 | test_1      | NULL       | TABLE     | IX            | GRANTED     | NULL      |
+|               4975165 | test_1      | PRIMARY    | RECORD    | X,REC_NOT_GAP | GRANTED     | 5         |
++-----------------------+-------------+------------+-----------+---------------+-------------+-----------+
+2 rows in set (0.02 sec)
+
+```
+
