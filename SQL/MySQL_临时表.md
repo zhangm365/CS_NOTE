@@ -1,10 +1,14 @@
-[toc]
+- [MySQL 临时表](#mysql-临时表)
+  - [1. 临时表](#1-临时表)
+    - [1.1 临时表的特点](#11-临时表的特点)
+  - [2. 临时表与主备复制](#2-临时表与主备复制)
+  - [3. 内存临时表的使用场景](#3-内存临时表的使用场景)
+    - [3.1 `union` 语句的执行](#31-union-语句的执行)
+    - [3.2 group by 执行](#32-group-by-执行)
 
 # MySQL 临时表
 
 [MySQL 37讲](https://time.geekbang.org/column/article/80477)
-
------------------------
 
 临时表分为两类：
 
@@ -22,7 +26,6 @@ create temporary table t(id int primary key)engine = memory;
 
 -- 创建一个普通临时表
 create temporary table t(id int primary key)engine = innodb; 	
-
 
 -- 创建一个普通表
 create table t(id int primary key);
@@ -53,7 +56,7 @@ create table t_37(id int primary key, a int, b int, index(a));
 (select 1000 as f) union (select id from t_37 order by id desc limit 2);
 ```
 
-![](.\pictures\37_1.png)
+![](./pictures/37_1.png)
 
 如图：在 `Extra` 字段显示 `Using temporary` 时，表示这个语句执行过程中会创建临时表。
 这个语句的执行流程是这样的：
@@ -75,7 +78,7 @@ create table t_37(id int primary key, a int, b int, index(a));
 select id%10 as m, count(*) as c from t_37 group by m;
 ```
 
-![](.\pictures\37_2.png)
+![](./pictures/37_2.png)
 
 从 `Extra` 字段可以看出：
 
