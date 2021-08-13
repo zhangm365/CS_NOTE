@@ -14,7 +14,7 @@ class Message
     private:
         friend class Folder;
         friend void swap( Message &, Message & );
-        friend void swap( Folder &, Folder & );
+        // friend void swap( Folder &, Folder & );
 
     public:
         
@@ -25,10 +25,10 @@ class Message
         Message& operator=( const Message & );
 
         // 移动构造函数
-        // Message( Message && ) noexcept;
+        Message( Message && ) ;
 
         // 移动赋值运算符
-        // Message &operator=( Message && ) noexcept;
+        Message &operator=( Message && ) ;
 
 
         ~Message();
@@ -49,6 +49,9 @@ class Message
         // 从 folders 中的 每个 Folder 中删除本 Message
         void remove_from_Folders();   // ~Message() 析构函数调用
 
+        // 从本 Message 移动 Folder 指针
+        void move_Folders( Message *m );
+
         void addFldr( Folder *f ) { folders.insert(f); }
         void remFldr( Folder *f ) { folders.erase(f); }
 
@@ -63,7 +66,7 @@ class Folder
     
     private:
         friend class Message;
-        friend void swap( Message &, Message & );
+        // friend void swap( Message &, Message & );
         friend void swap( Folder &, Folder & );
 
     public:
@@ -73,10 +76,11 @@ class Folder
         Folder( const Folder & );
         Folder& operator=( const Folder & );
 
-        // Folder( Folder && ) noexcept;
-        // Folder& operator=( Folder && ) noexcept;
+        Folder( Folder && ) ;
+        Folder& operator=( Folder && ) ;
         
         ~Folder();
+
 
         void debug_print();
 
@@ -87,6 +91,8 @@ class Folder
         void add_to_Messages( const Folder & );
         void remove_from_Messages();
 
+        // 从本 Folder 中移动 msgs 指针
+        void move_Messages( Folder * );
 
         void addMsg(Message *m) { msgs.insert(m); }
         void remMsg(Message *m) { msgs.erase(m); }

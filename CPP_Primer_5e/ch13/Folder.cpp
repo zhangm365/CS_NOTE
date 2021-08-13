@@ -4,7 +4,7 @@
 void Message::save( Folder &f )
 {
 
-    // 将给定的 Folder 添加到我们的 Folder 集合中
+    // 将给定的 Folder 添加到我们的 folders 集合中
     folders.insert(&f);
 
     // 同时将本 Message 添加到 f 的 Message 集合中
@@ -40,6 +40,47 @@ Message::Message( const Message &rhs ) : contents(rhs.contents), folders(rhs.fol
 
 }
 
+void Message::move_Folders( Message *m )
+{
+
+    folders = std::move(m->folders);    // 使用 set 的移动赋值运算符
+    for( auto f : folders )
+    {
+        f->remMsg(m);   // 从 Folder 删除旧 Message
+        f->addMsg(this);    // 将本 Messsge 添加到 Folder 中
+    }
+
+    m->folders.clear();     // 确保销毁 m 是无害的
+
+}
+
+
+
+Message::Message( Message &&mhs ) : contents( std::move(mhs.contents) )
+{
+
+    move_Folders( &mhs );   // 移动 mhs 并更新 Folder 指针
+    std::cout << "Message move ctor\n";
+}
+
+
+
+Message& Message::operator=( Message &&mhs )
+{
+
+    if( this != &mhs )
+    {
+        remove_from_Folders();
+        contents = std::move(mhs.contents);
+        move_Folders(&mhs);
+    }
+
+    std::cout << "Message move assignment\n";
+
+    return *this;
+
+}
+
 
 void Message::remove_from_Folders()
 {
@@ -61,7 +102,9 @@ Message::~Message()
 Message& Message::operator=( const Message &rhs )
 {
 
+    // 先删除再插入它们来处理自赋值情况
     remove_from_Folders();
+
     contents = rhs.contents;
     folders = rhs.folders;
 
@@ -73,6 +116,7 @@ Message& Message::operator=( const Message &rhs )
 
 void swap( Message &lhs, Message &rhs )
 {
+    
     using std::swap;
 
     // 1. 先删除
@@ -101,7 +145,7 @@ void Message::debug_print()
 
 
 ///////***********Folder implement**********************///////////
-/*
+
 void swap( Folder &lhs, Folder &rhs )
 {
 
@@ -130,7 +174,7 @@ void swap( Folder &lhs, Folder &rhs )
     rhs.add_to_Messages(rhs);
 
 }
-*/
+
 
 
 void Folder::add_to_Messages( const Folder &f )
@@ -171,6 +215,52 @@ Folder& Folder::operator=( const Folder &rhs )
     return *this;
 
 }
+
+void Folder::move_Messages( Folder *f )
+{
+
+    msgs = std::move(f->msgs);  // 使用 set 的移动赋值运算符
+
+    for( auto m : msgs )
+    {
+
+        m->remFldr(m);
+        m->addFldr(this);
+    }
+
+    f->msgs.clear();
+
+}
+
+
+void Folder::Folder( Folder &&fhs )
+{
+    move_Messages(&fhs);
+    std::cout << "Folder move ctor\n";
+
+}
+
+
+Folder& Folder::operator=( Folder &&fhs )
+{
+
+    if( this != &fhs )
+    {
+
+        remove_from_Messages();
+
+        move_Messages(&fhs);
+    
+    }
+
+
+    std::cout << "Folder move assignment operator\n";
+    
+    return *this;
+
+}
+
+
 
 void Folder::debug_print()
 {

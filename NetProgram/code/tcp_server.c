@@ -1,43 +1,43 @@
 /*
 	SOCKET API
-1. socket:´´½¨Ò»¸öÍøÂçÌ×½Ó×Ö
-	Óï·¨:
+1. socket:åˆ›å»ºä¸€ä¸ªç½‘ç»œå¥—æ¥å­—
+	è¯­æ³•:
 		#include <sys/types.h>
 		#include <sys/socket.h>
 
-			socketÓÃÀ´´´½¨Ò»¸öÍøÂçÌ×½Ó×Ö
+			socketç”¨æ¥åˆ›å»ºä¸€ä¸ªç½‘ç»œå¥—æ¥å­—
 		int socket(int domain, int type, int protocol);
-			domain: Ö¸¶¨Ğ­ÒéÓò£¬Ğ­Òé×å. 
-					AF_UNIX/SF_LOCAL: unixÓòĞ­Òé×å
-					AF_INET: ipv4Ğ­Òé×å
-					AF_INET6:IPV6Ğ­Òé×å
+			domain: æŒ‡å®šåè®®åŸŸï¼Œåè®®æ—. 
+					AF_UNIX/SF_LOCAL: unixåŸŸåè®®æ—
+					AF_INET: ipv4åè®®æ—
+					AF_INET6:IPV6åè®®æ—
 					AF_BLUETOOTH:
 					....
-			type:Ö¸¶¨´´½¨µÄÌ×½Ó×ÖµÄÀàĞÍ:
-				 SOCK_STREAM: Á÷Ê½Ì×½Ó×Ö -> tcp 
-				 SOCK_DGRAM: Êı¾İ±¨Ì×½Ó×Ö¡¡-> udp
-				 SOCK_RAM: Ô­Ê¼Ì×½Ó×Ö¡¡¡¡
-			protocol: Ö¸¶¨¾ßÌåµÄĞ­Òé. Ò»°ãÎª0
+			type:æŒ‡å®šåˆ›å»ºçš„å¥—æ¥å­—çš„ç±»å‹:
+				 SOCK_STREAM: æµå¼å¥—æ¥å­— -> tcp 
+				 SOCK_DGRAM: æ•°æ®æŠ¥å¥—æ¥å­—ã€€-> udp
+				 SOCK_RAM: åŸå§‹å¥—æ¥å­—ã€€ã€€
+			protocol: æŒ‡å®šå…·ä½“çš„åè®®. ä¸€èˆ¬ä¸º0
 
-			·µ»ØÖµ:
-				³É¹¦·µ»ØÌ×½Ó×ÖÃèÊö·û( >0)
-				Ê§°Ü·µ»Ø-1, errno±»ÉèÖÃ¡£
+			è¿”å›å€¼:
+				æˆåŠŸè¿”å›å¥—æ¥å­—æè¿°ç¬¦( >0)
+				å¤±è´¥è¿”å›-1, errnoè¢«è®¾ç½®ã€‚
 
-2. 	ÍøÂçµØÖ·Ïà¹ØµÄÊı¾İ½á¹¹¼°º¯Êı
+2. 	ç½‘ç»œåœ°å€ç›¸å…³çš„æ•°æ®ç»“æ„åŠå‡½æ•°
 
-	Í¨ÓÃµØÖ·½á¹¹¡¡¡¡linux/socket.h
+	é€šç”¨åœ°å€ç»“æ„ã€€ã€€linux/socket.h
 	struct sockaddr
 	{
 		sa_family_t sa_family;
 		char sa_data[14];
 	};
 
-	internet Ğ­ÒéµØÖ·½á¹¹
+	internet åè®®åœ°å€ç»“æ„
 	struct sockaddr_in
 	{
-		sa_family_t sin_family; //Ğ­Òé×å£¬AF_INET
-		u_int16_t sin_port; //¶Ë¿ÚºÅ
-		struct in_addr sin_addr;  //ipµØÖ·
+		sa_family_t sin_family; //åè®®æ—ï¼ŒAF_INET
+		u_int16_t sin_port; //ç«¯å£å·
+		struct in_addr sin_addr;  //ipåœ°å€
 		char sin_zero[8];
 
 	};
@@ -49,43 +49,43 @@
 
 	typedef u_int32_t in_addr_t ;
 
-	µØÖ·×ª»»º¯Êı(µã·ÖÊ½µÄipµØÖ·¡¡<=> 32bitsÕûÊı,ÍøÂçµØÖ·)
+	åœ°å€è½¬æ¢å‡½æ•°(ç‚¹åˆ†å¼çš„ipåœ°å€ã€€<=> 32bitsæ•´æ•°,ç½‘ç»œåœ°å€)
 
 	#include <sys/socket.h>
 	#include <netinet/in.h>
 	#include <arpa/inet.h>
 	
 	int inet_aton(const char *cp, struct in_addr *inp);
-		inet_atonÓÃÀ´°ÑcpÖ¸ÏòµÄµã·ÖÊ½µÄipµØÖ·×Ö·û´®£¬
-		×ª»»³É32bitsÕûÊıµÄÍøÂçµØÖ·(×ª»»ºóµÄ½á¹û
-		±£´æÔÚinpÖ¸ÏòµÄ½á¹¹ÌåÖĞ¡£)
+		inet_atonç”¨æ¥æŠŠcpæŒ‡å‘çš„ç‚¹åˆ†å¼çš„ipåœ°å€å­—ç¬¦ä¸²ï¼Œ
+		è½¬æ¢æˆ32bitsæ•´æ•°çš„ç½‘ç»œåœ°å€(è½¬æ¢åçš„ç»“æœ
+		ä¿å­˜åœ¨inpæŒ‡å‘çš„ç»“æ„ä½“ä¸­ã€‚)
 	
 	in_addr_t inet_addr(const char *cp);
-		inet_addrÓÃÀ´°ÑcpÖ¸ÏòµÄµã·ÖÊ½µÄipµØÖ·×Ö·û´®£¬
-		×ª»»³ÉÒ»¸ö32bitsÕûÊıµÄÍøÂçµØÖ·ip¡£
-		Æä×ª»»½á¹ûÍ¨¹ıº¯Êı·µ»ØÖµ·µ»Ø¡£
+		inet_addrç”¨æ¥æŠŠcpæŒ‡å‘çš„ç‚¹åˆ†å¼çš„ipåœ°å€å­—ç¬¦ä¸²ï¼Œ
+		è½¬æ¢æˆä¸€ä¸ª32bitsæ•´æ•°çš„ç½‘ç»œåœ°å€ipã€‚
+		å…¶è½¬æ¢ç»“æœé€šè¿‡å‡½æ•°è¿”å›å€¼è¿”å›ã€‚
 	
 	in_addr_t inet_network(const char *cp);
-		inet_networkÓÃÀ´°ÑcpÖ¸ÏòµÄµã·ÖÊ½µÄipµØÖ·×Ö·û´®£¬
-		×ª»»³ÉÒ»¸ö32bitsÕûÊıµÄÖ÷»ú×Ö½ÚĞòIPµØÖ·
-		Æä×ª»»½á¹ûÍ¨¹ıº¯Êı·µ»ØÖµ·µ»Ø.
+		inet_networkç”¨æ¥æŠŠcpæŒ‡å‘çš„ç‚¹åˆ†å¼çš„ipåœ°å€å­—ç¬¦ä¸²ï¼Œ
+		è½¬æ¢æˆä¸€ä¸ª32bitsæ•´æ•°çš„ä¸»æœºå­—èŠ‚åºIPåœ°å€
+		å…¶è½¬æ¢ç»“æœé€šè¿‡å‡½æ•°è¿”å›å€¼è¿”å›.
 	
 
 
-		inet_ntoaÓÃÀ´°Ñin±íÊ¾µÄ32bitsÕûÊıµÄÍøÂçµØÖ·×ª»»³É
-		Ò»¸öµã·ÖÊ½µÄipµØÖ·×Ö·û´®£¬Æä×ª»»½á¹û
-		Í¨¹ıº¯Êı·µ»ØÖµ·µ»Ø¡£
+		inet_ntoaç”¨æ¥æŠŠinè¡¨ç¤ºçš„32bitsæ•´æ•°çš„ç½‘ç»œåœ°å€è½¬æ¢æˆ
+		ä¸€ä¸ªç‚¹åˆ†å¼çš„ipåœ°å€å­—ç¬¦ä¸²ï¼Œå…¶è½¬æ¢ç»“æœ
+		é€šè¿‡å‡½æ•°è¿”å›å€¼è¿”å›ã€‚
 	char *inet_ntoa(struct in_addr in);
 
 
-		ÏÂÃæÕâĞ©º¯ÊıÓÃÀ´ÔÚÍøÂç×Ö½ÚĞòÓëÖ÷»ú×Ö½ÚĞòÖ®¼ä½øĞĞ×ª»»
+		ä¸‹é¢è¿™äº›å‡½æ•°ç”¨æ¥åœ¨ç½‘ç»œå­—èŠ‚åºä¸ä¸»æœºå­—èŠ‚åºä¹‹é—´è¿›è¡Œè½¬æ¢
 		
 
 	       #include <arpa/inet.h>
 
 		h to n: host ->network
-		l :  long ³¤ÕûÊı(32Î»)
-		s:  short ¶ÌÕûĞÎ(16bits)
+		l :  long é•¿æ•´æ•°(32ä½)
+		s:  short çŸ­æ•´å½¢(16bits)
 
 		n to h: network->host
        uint32_t htonl(uint32_t hostlong);
@@ -96,21 +96,21 @@
                   
        uint16_t ntohs(uint16_t netshort);
 
-3. bind: °ÑÍøÂçµØÖ·°ó¶¨µ½Ì×½Ó×ÖÉÏ¡£
-		Ò»°ã·şÎñÆ÷³ÌĞòĞèÒªbind
+3. bind: æŠŠç½‘ç»œåœ°å€ç»‘å®šåˆ°å¥—æ¥å­—ä¸Šã€‚
+		ä¸€èˆ¬æœåŠ¡å™¨ç¨‹åºéœ€è¦bind
 
 		#include <sys/types.h>
 		#include <sys/socket.h>
 
 		int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
-			sockfd:Òª°ó¶¨µÄÌ×½Ó×ÖÃèÊö·û
-			addr: ÍøÂçµØÖ·¡£Òª°ó¶¨µ½Ì×½Ó×ÖÉÏÃæµÄÍøÂçµØÖ·¡£
-			addrlen:¡¡ÍøÂçµØÖ·½á¹¹ÌåµÄ³¤¶È
+			sockfd:è¦ç»‘å®šçš„å¥—æ¥å­—æè¿°ç¬¦
+			addr: ç½‘ç»œåœ°å€ã€‚è¦ç»‘å®šåˆ°å¥—æ¥å­—ä¸Šé¢çš„ç½‘ç»œåœ°å€ã€‚
+			addrlen:ã€€ç½‘ç»œåœ°å€ç»“æ„ä½“çš„é•¿åº¦
 
-		·µ»ØÖµ:
-			³É¹¦·µ»Ø0
-			Ê§°Ü·µ»Ø-1, errno±»ÉèÖÃ¡£
-4. ÉèÖÃ¼àÌıÊıÄ¿
+		è¿”å›å€¼:
+			æˆåŠŸè¿”å›0
+			å¤±è´¥è¿”å›-1, errnoè¢«è®¾ç½®ã€‚
+4. è®¾ç½®ç›‘å¬æ•°ç›®
 	NAME
        listen - listen for connections on a socket
 
@@ -118,15 +118,15 @@ SYNOPSIS
        #include <sys/types.h>          
        #include <sys/socket.h>
 
-		listenÓÃÀ´ÉèÖÃÄÚºËÇëÇóÁ¬½Ó¶ÓÁĞÉÏµÄ×î´óÇëÇóÊı¡£
+		listenç”¨æ¥è®¾ç½®å†…æ ¸è¯·æ±‚è¿æ¥é˜Ÿåˆ—ä¸Šçš„æœ€å¤§è¯·æ±‚æ•°ã€‚
        int listen(int sockfd, int backlog);
-       	sockfd:Òª¼àÌıµÄÌ×½Ó×Ö¡£ÒªÉèÖÃÇëÇóÁ¬½ÓÊıµÄÌ×½Ó×Ö
-       	backlog:¼àÌı¶ÓÁĞÉÏ×î´óÇëÇóÊı¡£
-       	·µ»ØÖµ:
-       		³É¹¦·µ»Ø0,
-       		Ê§°Ü·µ»Ø-1, errno±»ÉèÖÃ
+       	sockfd:è¦ç›‘å¬çš„å¥—æ¥å­—ã€‚è¦è®¾ç½®è¯·æ±‚è¿æ¥æ•°çš„å¥—æ¥å­—
+       	backlog:ç›‘å¬é˜Ÿåˆ—ä¸Šæœ€å¤§è¯·æ±‚æ•°ã€‚
+       	è¿”å›å€¼:
+       		æˆåŠŸè¿”å›0,
+       		å¤±è´¥è¿”å›-1, errnoè¢«è®¾ç½®
 
-5. accept: ÔÚ¼àÌıÌ×½Ó×Ö(listenºóµÄÌ×½Ó×Ö)ÉÏµÈ´ı²¢½ÓÊÜ¿Í»§¶ËµÄÁ¬½ÓÇëÇó
+5. accept: åœ¨ç›‘å¬å¥—æ¥å­—(listenåçš„å¥—æ¥å­—)ä¸Šç­‰å¾…å¹¶æ¥å—å®¢æˆ·ç«¯çš„è¿æ¥è¯·æ±‚
 	NAME
        accept - accept a new connection on a socket
 
@@ -135,18 +135,18 @@ SYNOPSIS
 
 	
        int accept(int socket, struct sockaddr *restrict address,    socklen_t *restrict address_len);
-       	socket:¼àÌıÌ×½Ó×Ö
-       	address:struct sockaddrµÄÖ¸Õë£¬ÓÃÀ´±£´æ¿Í»§¶ËµÄÍøÂçµØÖ·¡£
-       	address_len: Ö¸Õë¡£ÓÃÀ´±£´æ¿Í»§¶ËÍøÂçµØÖ·µÄ³¤¶È
-       			NOTE:´Ë´¦ÔÚµ÷ÓÃÊ±address_lenÀïĞèÒª±£´æaddressÖ¸ÏòµÄÄÇ¸ö½á¹¹Ìå
-       			µÄ´óĞ¡£¬º¯Êı·µ»ØÊ±£¬address_lenÖ¸Ïò¿Í»§¶ËµØÖ·µÄÊµ¼Ê´óĞ¡¡£
-       	·µ»ØÖµ:
-       		³É¹¦·µ»ØÒ»¸öÁ¬½ÓÌ×½Ó×Ö(>0),
-       			´ËÁ¬½ÓÌ×½Ó×Ö±íÊ¾ÓëÒ»¸ö¿Í»§¶ËµÄÁ¬½Ó£¬
-       			ÊÇÒ»¸öÎÄ¼şÃèÊö·û£¬read/write,close
-       		Ê§°Ü·µ»Ø-1, errno±»ÉèÖÃ¡£
+       	socket:ç›‘å¬å¥—æ¥å­—
+       	address:struct sockaddrçš„æŒ‡é’ˆï¼Œç”¨æ¥ä¿å­˜å®¢æˆ·ç«¯çš„ç½‘ç»œåœ°å€ã€‚
+       	address_len: æŒ‡é’ˆã€‚ç”¨æ¥ä¿å­˜å®¢æˆ·ç«¯ç½‘ç»œåœ°å€çš„é•¿åº¦
+       			NOTE:æ­¤å¤„åœ¨è°ƒç”¨æ—¶address_lené‡Œéœ€è¦ä¿å­˜addressæŒ‡å‘çš„é‚£ä¸ªç»“æ„ä½“
+       			çš„å¤§å°ï¼Œå‡½æ•°è¿”å›æ—¶ï¼Œaddress_lenæŒ‡å‘å®¢æˆ·ç«¯åœ°å€çš„å®é™…å¤§å°ã€‚
+       	è¿”å›å€¼:
+       		æˆåŠŸè¿”å›ä¸€ä¸ªè¿æ¥å¥—æ¥å­—(>0),
+       			æ­¤è¿æ¥å¥—æ¥å­—è¡¨ç¤ºä¸ä¸€ä¸ªå®¢æˆ·ç«¯çš„è¿æ¥ï¼Œ
+       			æ˜¯ä¸€ä¸ªæ–‡ä»¶æè¿°ç¬¦ï¼Œread/write,close
+       		å¤±è´¥è¿”å›-1, errnoè¢«è®¾ç½®ã€‚
 
-6. connect: ¡¡Á¬½ÓTCP·şÎñÆ÷
+6. connect: ã€€è¿æ¥TCPæœåŠ¡å™¨
 	NAME
        connect - connect a socket
 
@@ -154,18 +154,18 @@ SYNOPSIS
        #include <sys/socket.h>
 
        int connect(int socket, const struct sockaddr *addr,  socklen_t addr_len);
-       	socket:Ì×½Ó×ÖÃèÊö·û¡£
-       	addr: struct sockaddrµÄÖ¸Õë£¬Ö¸Ïò·şÎñÆ÷µÄµØÖ·¡£
-       	addr_len: µÚ¶ş¸ö²ÎÊıÖ¸ÏòµÄ½á¹¹ÌåµÄ³¤¶È
+       	socket:å¥—æ¥å­—æè¿°ç¬¦ã€‚
+       	addr: struct sockaddrçš„æŒ‡é’ˆï¼ŒæŒ‡å‘æœåŠ¡å™¨çš„åœ°å€ã€‚
+       	addr_len: ç¬¬äºŒä¸ªå‚æ•°æŒ‡å‘çš„ç»“æ„ä½“çš„é•¿åº¦
        	
-		·µ»ØÖµ:
-			³É¹¦·µ»Ø0
-			Ê§°Ü·µ»Ø-1, errno±»ÉèÖÃ
-7. ÍùÌ×½Ó×ÖÉÏ·¢ËÍÊı¾İ
-	write/send/sendto¡¡ÕâÈı¸öº¯ÊıÔÚ·¢ËÍÊı¾İÊ±£¬tcpÓ¦ÓÃ¶¼¿ÉÒÔÓÃ
-		¶øudpÖ»ÄÜÓÃsendto
+		è¿”å›å€¼:
+			æˆåŠŸè¿”å›0
+			å¤±è´¥è¿”å›-1, errnoè¢«è®¾ç½®
+7. å¾€å¥—æ¥å­—ä¸Šå‘é€æ•°æ®
+	write/send/sendtoã€€è¿™ä¸‰ä¸ªå‡½æ•°åœ¨å‘é€æ•°æ®æ—¶ï¼Œtcpåº”ç”¨éƒ½å¯ä»¥ç”¨
+		è€Œudpåªèƒ½ç”¨sendto
 
-	int write(int fd, void *buf, size_t size); //´Ë´¦Ê¡ÂÔxxx¸ö×Ö£¬Ç°ÃæÎÄ¼şIOÒÑ¾­Ìáµ½
+	int write(int fd, void *buf, size_t size); //æ­¤å¤„çœç•¥xxxä¸ªå­—ï¼Œå‰é¢æ–‡ä»¶IOå·²ç»æåˆ°
 
 	NAME
        send - send a message on a socket
@@ -174,14 +174,14 @@ SYNOPSIS
        #include <sys/socket.h>
 
        ssize_t  send(int socket, const void *buffer, size_t length,    int flags);
-       	socket: Ì×½Ó×ÖÃèÊö·û¡£±íÊ¾ÒªÍùÄÄ¸öÌ×½Ó×ÖÉÏ·¢Êı¾İ
-       	buffer:Òª·¢ËÍµÄÊı¾İµÄÊ×µØÖ·
-       	length:ÒâÏòÒª·¢ËÍµÄÊı¾İµÄ³¤¶È
-       	flags : ´Ë´¦Îª0
+       	socket: å¥—æ¥å­—æè¿°ç¬¦ã€‚è¡¨ç¤ºè¦å¾€å“ªä¸ªå¥—æ¥å­—ä¸Šå‘æ•°æ®
+       	buffer:è¦å‘é€çš„æ•°æ®çš„é¦–åœ°å€
+       	length:æ„å‘è¦å‘é€çš„æ•°æ®çš„é•¿åº¦
+       	flags : æ­¤å¤„ä¸º0
 
-       	·µ»ØÖµ:
-       		³É¹¦·µ»Ø·¢ËÍµÄ×Ö½ÚÊı
-       		Ê§°Ü·µ»Ø-1,errno±»ÉèÖÃ
+       	è¿”å›å€¼:
+       		æˆåŠŸè¿”å›å‘é€çš„å­—èŠ‚æ•°
+       		å¤±è´¥è¿”å›-1,errnoè¢«è®¾ç½®
 	==
 	NAME
        sendto - send a message on a socket
@@ -192,21 +192,21 @@ SYNOPSIS
        ssize_t  sendto(int  socket,  const  void  *message,  size_t   length, int flags, 
        		const struct sockaddr *dest_addr,
              		 socklen_t dest_len);
-             		´Ëº¯ÊıÇ°ÃæËÄ¸ö²ÎÊı£¬ÓësendÒ»Ñù¡£
+             		æ­¤å‡½æ•°å‰é¢å››ä¸ªå‚æ•°ï¼Œä¸sendä¸€æ ·ã€‚
              		socket:
              		message:
              		length:
              		flags:
 
-             		dest_addr:±íÊ¾Êı¾İµÄ·¢ËÍÄ¿µÄµØ¡£
-             		dest_len:±íÊ¾ÉÏÒ»¸ö²ÎÊı½á¹¹ÌåµÄ³¤¶È¡£
-             	·µ»ØÖµ:
-             		³É¹¦·µ»Ø·¢ËÍµÄ×Ö½ÚÊı
-             		Ê§°Ü·µ»Ø-1, errno±»ÉèÖÃ
+             		dest_addr:è¡¨ç¤ºæ•°æ®çš„å‘é€ç›®çš„åœ°ã€‚
+             		dest_len:è¡¨ç¤ºä¸Šä¸€ä¸ªå‚æ•°ç»“æ„ä½“çš„é•¿åº¦ã€‚
+             	è¿”å›å€¼:
+             		æˆåŠŸè¿”å›å‘é€çš„å­—èŠ‚æ•°
+             		å¤±è´¥è¿”å›-1, errnoè¢«è®¾ç½®
 
-8. ÔÚÌ×½Ó×ÖÉÏÃæ½ÓÊÕÊı¾İ
-	read/recv/recvfrom  ÕâÈı¸ö²ÎÊıÔÚ½ÓÊÕÊı¾İ£¬tcpÓ¦ÓÃ¶¼¿ÉÒÔÓÃ
-		¶øudpÖ»ÄÜÓÃrecvfrom
+8. åœ¨å¥—æ¥å­—ä¸Šé¢æ¥æ”¶æ•°æ®
+	read/recv/recvfrom  è¿™ä¸‰ä¸ªå‚æ•°åœ¨æ¥æ”¶æ•°æ®ï¼Œtcpåº”ç”¨éƒ½å¯ä»¥ç”¨
+		è€Œudpåªèƒ½ç”¨recvfrom
 		
 
 NAME
@@ -216,14 +216,14 @@ SYNOPSIS
        #include <sys/socket.h>
 
        ssize_t  recv(int  socket,  void *buffer, size_t length, int   flags);
-       	socket: Ì×½Ó×ÖÃèÊö·û¡£±íÊ¾Òª´ÓÄÄ¸öÌ×½Ó×ÖÉÏ½ÓÊÕÊı¾İ
-       	buffer:Ö¸Õë£¬ÓÃÀ´±£´æ½ÓÊÕµ½µÄÊı¾İ
-       	length:ÏëÒª½ÓÊÕ¶àÉÙÊı¾İ£¬ÒÔ×Ö½ÚÎªµ¥Î»
-       	flags: Îª0
-       	·µ»ØÖµ:
-       		> 0: ³É¹¦½ÓÊÕµ½¶àÉÙÊı¾İ
-       		= -1: Ê§°Ü£¬errno±»ÉèÖÃ
-       		= 0: ¶Ô·½ÒÑ¾­°ÑÁ¬½Ó¹Ø±ÕÁË
+       	socket: å¥—æ¥å­—æè¿°ç¬¦ã€‚è¡¨ç¤ºè¦ä»å“ªä¸ªå¥—æ¥å­—ä¸Šæ¥æ”¶æ•°æ®
+       	buffer:æŒ‡é’ˆï¼Œç”¨æ¥ä¿å­˜æ¥æ”¶åˆ°çš„æ•°æ®
+       	length:æƒ³è¦æ¥æ”¶å¤šå°‘æ•°æ®ï¼Œä»¥å­—èŠ‚ä¸ºå•ä½
+       	flags: ä¸º0
+       	è¿”å›å€¼:
+       		> 0: æˆåŠŸæ¥æ”¶åˆ°å¤šå°‘æ•°æ®
+       		= -1: å¤±è´¥ï¼Œerrnoè¢«è®¾ç½®
+       		= 0: å¯¹æ–¹å·²ç»æŠŠè¿æ¥å…³é—­äº†
 		
 	====
 	NAME
@@ -236,16 +236,16 @@ SYNOPSIS
               int flags, struct sockaddr *restrict address,
               socklen_t *restrict address_len);
 
-		´Ë²ÎÊıÇ°ÃæËÄ¸ö²ÎÊıÓërecvÒ»Ñù
-		address: ÍøÂçµØÖ·½á¹¹ÌåÖ¸Õë¡£±íÊ¾Òª´ÓÄÄ¸öÖ÷»úÉÏ½ÓÊÕÊı¾İ
-		address_len:ÉÏÃæÄÇ¸ö²ÎÊıÖ¸ÕëµÄ½á¹¹ÌåµÄ³¤¶È
+		æ­¤å‚æ•°å‰é¢å››ä¸ªå‚æ•°ä¸recvä¸€æ ·
+		address: ç½‘ç»œåœ°å€ç»“æ„ä½“æŒ‡é’ˆã€‚è¡¨ç¤ºè¦ä»å“ªä¸ªä¸»æœºä¸Šæ¥æ”¶æ•°æ®
+		address_len:ä¸Šé¢é‚£ä¸ªå‚æ•°æŒ‡é’ˆçš„ç»“æ„ä½“çš„é•¿åº¦
 
-	·µ»ØÖµ:
-		       > 0: ³É¹¦½ÓÊÕµ½¶àÉÙÊı¾İ
-       		= -1: Ê§°Ü£¬errno±»ÉèÖÃ
-       		= 0: ¶Ô·½ÒÑ¾­°ÑÁ¬½Ó¹Ø±ÕÁË
+	è¿”å›å€¼:
+		       > 0: æˆåŠŸæ¥æ”¶åˆ°å¤šå°‘æ•°æ®
+       		= -1: å¤±è´¥ï¼Œerrnoè¢«è®¾ç½®
+       		= 0: å¯¹æ–¹å·²ç»æŠŠè¿æ¥å…³é—­äº†
 
-9. shutdown :¹Ø±ÕÌ×½Ó×Ö
+9. shutdown :å…³é—­å¥—æ¥å­—
 	NAME
        shutdown - shut down socket send and receive operations
 
@@ -253,11 +253,11 @@ SYNOPSIS
        #include <sys/socket.h>
 
        int shutdown(int socket, int how);
-       	socket:Òª¹Ø±ÕµÄÌ×½Ó×Ö
-       	how: ¹Ø±Õ·½Ê½£¬ÓĞÒÔÏÂÈıÖÖÇé¿ö
-       		SHUT_RD: ¹Ø±Õ¶Á
-       		SHUT_WR:¡¡¹Ø±ÕĞ´
-       		SHUT_RDWR:¡¡¹Ø±Õ¶ÁĞ´
+       	socket:è¦å…³é—­çš„å¥—æ¥å­—
+       	how: å…³é—­æ–¹å¼ï¼Œæœ‰ä»¥ä¸‹ä¸‰ç§æƒ…å†µ
+       		SHUT_RD: å…³é—­è¯»
+       		SHUT_WR:ã€€å…³é—­å†™
+       		SHUT_RDWR:ã€€å…³é—­è¯»å†™
 
 	close <=> shutdown (, SHUT_RDWR);
 
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
 	int sock;
 	int r;
 
-	/*step 1: ´´½¨Ò»¸öÌ×½Ó×Ö*/
+	/*step 1: åˆ›å»ºä¸€ä¸ªå¥—æ¥å­—*/
 	sock = socket(AF_INET,  
 				SOCK_STREAM, 
 				0
@@ -288,12 +288,12 @@ int main(int argc, char *argv[])
 	}
 
 
-	/*step 3: °ó¶¨¡£*/
+	/*step 3: ç»‘å®šã€‚*/
 	/*struct sockaddr_in
 	{
-		sa_family_t sin_family; //Ğ­Òé×å£¬AF_INET
-		u_int16_t sin_port; //¶Ë¿ÚºÅ
-		struct in_addr sin_addr;  //ipµØÖ·
+		sa_family_t sin_family; //åè®®æ—ï¼ŒAF_INET
+		u_int16_t sin_port; //ç«¯å£å·
+		struct in_addr sin_addr;  //ipåœ°å€
 		char sin_zero[8];
 
 	};*/
@@ -304,8 +304,8 @@ int main(int argc, char *argv[])
 	servAddr.sin_family = AF_INET;
 	//inet_aton("192.168.1.204", &(servAddr.sin_addr));
 	//servAddr.sin_addr.s_addr = inet_addr("192.168.1.204");
-	servAddr.sin_addr.s_addr = htonl(INADDR_ANY); //±íÊ¾Ö÷»úÉÏÈÎÒ»Íø¿¨µÄµØÖ·¶¼¿ÉÒÔ
-											  //ÈÃÏµÍ³×Ô¶¯°ïÎÒÈ¥Ñ¡Ò»¸öÍø¿¨µØÖ·
+	servAddr.sin_addr.s_addr = htonl(INADDR_ANY); //è¡¨ç¤ºä¸»æœºä¸Šä»»ä¸€ç½‘å¡çš„åœ°å€éƒ½å¯ä»¥
+											  //è®©ç³»ç»Ÿè‡ªåŠ¨å¸®æˆ‘å»é€‰ä¸€ä¸ªç½‘å¡åœ°å€
 	servAddr.sin_port = htons( 8888);  //
 
 	r = bind(sock, (const struct sockaddr*) &servAddr, sizeof(servAddr));
@@ -315,9 +315,9 @@ int main(int argc, char *argv[])
 
 
 	/*step 5: accept*/
-	struct sockaddr_in cliAddr; //ÓÃÀ´±£´æ¿Í»§¶ËµÄµØÖ·
-	socklen_t addrlen; //ÓÃÀ´±£´æ¿Í»§¶ËµØÖ·µÄ³¤¶È
-	addrlen = sizeof(struct sockaddr_in); //NOTE: addrlenÔÚµ÷ÓÃacceptÇ°´æ·Å±£´æ¿Í»§¶ËµØÖ·µÄ½á¹¹ÌåµÄ³¤¶È
+	struct sockaddr_in cliAddr; //ç”¨æ¥ä¿å­˜å®¢æˆ·ç«¯çš„åœ°å€
+	socklen_t addrlen; //ç”¨æ¥ä¿å­˜å®¢æˆ·ç«¯åœ°å€çš„é•¿åº¦
+	addrlen = sizeof(struct sockaddr_in); //NOTE: addrlenåœ¨è°ƒç”¨acceptå‰å­˜æ”¾ä¿å­˜å®¢æˆ·ç«¯åœ°å€çš„ç»“æ„ä½“çš„é•¿åº¦
 	
 	
 	int connfd;
