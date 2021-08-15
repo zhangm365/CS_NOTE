@@ -1,6 +1,32 @@
 
 
 #include <iostream>
+#include <vector>
+
+template <typename T>
+void f( T&& val )
+{
+
+    // std::vector<T> vec;
+    T t = val;
+
+    t = 6;
+    val = 7;
+    if( t == val )
+    {
+        printf("T is &\n");
+        printf("%d %d\n", t, val);
+    }
+    else
+    {
+        printf("T is NOT &\n");
+        printf("%d %d\n", t, val);
+    }
+
+    
+
+} 
+
 
 int main()
 {
@@ -33,6 +59,13 @@ int main()
     r3 = 8;
     std::cout << z << " " << typeid(rf3).name() << "\n";
 
+
+    std::cout << "-------------\n";
+
+    
+
+    f(15);
+    f(x); 
     return 0;
 
 }

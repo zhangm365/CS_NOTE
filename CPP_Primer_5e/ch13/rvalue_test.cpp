@@ -16,9 +16,9 @@ int main()
 
     int &&rr1 = 29;
     // int &&rr2 = rr1; error: cannot bind rvalue reference of type ‘int&&’ to lvalue of type ‘int’
-
+    rr1 = 6;
     decltype(rr1) y = 1;
-    
+    // int &&rr3 = a;  // error: cannot bind rvalue reference of type 'int&&' to lvalue of type 'int'
     int &&rr3 = std::move(a);
     cout << rr3 << endl;
 
