@@ -122,7 +122,7 @@
 
     `MySQL` 中参数 `innodb_deadlock_detect` 默认是 `on`，表示开启主动死锁检测。可以通过命令 `show variables like '%innodb_deadlock_detect%'` 查看。
 
-    `InnoDB` 引擎通过 `wait-for graph` ( 等待图 ) 方式来检测死锁。
+    `InnoDB` 引擎通过 `wait-for graph` ( 等待图 ) 方式来主动检测死锁。
 
     `wait-for graph` 要求数据库存放以下两种信息：
 

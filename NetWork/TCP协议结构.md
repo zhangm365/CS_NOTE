@@ -4,7 +4,7 @@
 
 TCP头部结构如下：
 
-![avatar](tcp_head.png)
+![avatar](./pics/tcp_head.png)
 
 -   16位端口号：告知主机该报文段来着哪里(源端口)以及传给哪个上层协议或应用程序(目的端口)。知名服务的端口号定义在/etc/services文件中。
 
@@ -36,7 +36,7 @@ TCP头部结构如下：
 
 TCP三次握手流程图：
 
-![avatar](tcp_three.png)
+![avatar](./pics/tcp_three.png)
 
 
 
@@ -56,7 +56,7 @@ TCP三次握手流程图：
 
 TCP四次挥手流程图：
 
-![avatar](tcp_four.png)
+![avatar](./pics/tcp_four.png)
 
 
 
@@ -67,7 +67,7 @@ TCP四次挥手流程图：
 
 >   MSL(max segment life):报文段最大生存时间，TCP报文在网络中的最大生存时间。
 
-TIME_WAIT状态存在的理由：
+`TIME_WAIT`状态存在的理由：
 
 -   可靠地终止TCP连接；
 -   保证让延迟的报文有足够的时间被识别并丢弃；

@@ -61,7 +61,7 @@ insert into t values(0,0,0),(5,5,5),
 1.  加锁的基本单位是： `Next-Key Lock`，即 「前闭后开」区间；
 2.  查找数据过程中访问到的索引才会加锁。
 
-这些锁是在执行语句过程中一个一个加的，所以加锁是一个动态过程。
+这些锁是在执行语句过程中一个一个加的，所以加锁是一个动态过程，而且加锁范围也会动态变化。
 
 ### 2.2 优化原则
 
@@ -73,9 +73,14 @@ insert into t values(0,0,0),(5,5,5),
 
 ### 2.3 锁日志记录
 
+用户可以通过 `show engine innodb status` 命令来查看当前锁请求的信息：
+
 `lock_mode X waiting` 表示`next-key lock`；
 `lock_mode X locks rec but not gap`是只有行锁；
 `locks gap before rec`，就是只有间隙锁；
+
+从 `InnoDB 1.0` 版本之后，可以查看系统库 `information_schema` 中的 `INNODB_TRX`，`INNODB_LOCKS`，`INNODB_WAIT_LOCKS` 三个表查看当前事务的锁问题。
+
 `SELECT ENGINE_TRANSACTION_ID, OBJECT_NAME, INDEX_NAME, LOCK_TYPE, LOCK_MODE, LOCK_STATUS, LOCK_DATA FROM performance_schema.data_locks;`
 
 ```mysql

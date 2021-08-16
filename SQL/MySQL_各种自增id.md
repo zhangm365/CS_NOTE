@@ -5,7 +5,7 @@
 	- [4. `trx_id`](#4-trx_id)
 	- [5. `thread_id`](#5-thread_id)
 
-# MySQL 自增主键用完怎么办？
+# MySQL 自增 id 用完怎么办？
 
 `MySQL` 中存在很多自增的 `id`，每个自增 `id` 都定义了初始值，并通过加步长不断递增。因此，这些自增 `id` 是有上限的。
 
@@ -38,6 +38,16 @@ mysql>
 ```
 
 当出现这种情况时，可以将自增主键 `id` 类型改为 `8` 字节的 `bigint unsigned ` 类型。
+
+另外，在 `innoDB` 引擎中，自增长的列必须是索引，而且是索引的第一个列，否则，`MySQL` 提供会抛出异常。
+
+```mysql
+mysql> CREATE TABLE t(a INT AUTO_INCREMENT, b INT, KEY(b,a))ENGINE=InnoDB;
+ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+
+```
+
+
 
 ## 2. `InnoDB` 引擎的自增 `row_id`
 
