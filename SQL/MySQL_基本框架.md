@@ -2,6 +2,7 @@
   - [1. MySQL基本框架](#1-mysql基本框架)
   - [2. SELECT 语句执行过程](#2-select-语句执行过程)
   - [3. SQL 分组](#3-sql-分组)
+  - [4. `DML` 和 `DDL` 操作](#4-dml-和-ddl-操作)
 
 # SQL语句执行过程
 
