@@ -9,13 +9,14 @@ int main( int argc, char *argv[] )
 
     key_t key = ftok(PATH_NAME, PRO_KEY);
 
-
+    // 创建一个信号量集合：集合中只有一个信号量，信号量的编号从 0 开始
     semid = semget( key, 1, IPC_CREAT | 0644 );
     if( semid == -1 )
     {
         errExit("semget");
     }
 
+    // 共享内存段
     shmid = shmget( IPC_PRIVATE, MEM_SIZE, IPC_CREAT | 0644 );
     if( shmid == -1 )
     {
@@ -30,9 +31,10 @@ int main( int argc, char *argv[] )
         errExit("shmat");
     } 
 
+    // 初始化信号量集合中的信号量
     union semun sem_arg, dummy;
 
-    sem_arg.val = 1;
+    sem_arg.val = 1;    // 信号量的值为 1
 
     if ( semctl( semid, 0, SETVAL, sem_arg ) == -1 )
     {
@@ -58,7 +60,7 @@ int main( int argc, char *argv[] )
     printf("read data : %s from semid : %d\n", addr, shmid);
 
 
-    if( semctl(semid, 0, IPC_RMID, dummy) == -1 )
+    if( semctl(semid, 0, IPC_RMID, sem_arg) == -1 )
     {
         errExit("semctl");
     }

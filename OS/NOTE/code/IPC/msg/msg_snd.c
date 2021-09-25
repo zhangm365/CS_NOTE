@@ -44,7 +44,7 @@ int main( int argc, char *argv[] )
     printf("key = %d\n", key);
     // step2 : msgget 创建一个消息队列ID
     int msgid;
-    msgid = msgget( key, IPC_CREAT | 0666 );
+    msgid = msgget( 100, IPC_CREAT | 0666 );
     if( msgid == -1 )
     {
         if( errno == EEXIST )

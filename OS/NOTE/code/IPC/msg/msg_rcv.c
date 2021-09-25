@@ -1,7 +1,4 @@
 
-
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,7 +40,7 @@ int main( int argc, char *argv[] )
 
     // step2 : msgget 打开一个现有消息队列ID
     int msgid;
-    msgid = msgget( key, IPC_CREAT | 0666 );   // 客户端引用一个现有消息队列
+    msgid = msgget( 100, IPC_CREAT | 0666 );   // 客户端引用一个现有消息队列
     if( msgid == -1 )
     {
         if( errno == EEXIST )

@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
     printf("%d, %d\n", socket_pair[0], socket_pair[1]);
     int size = write(socket_pair[0], str, strlen(str));
     //可以读取成功；
-    read(socket_pair[1], buf, size);
+    read(socket_pair[1], buf, size);    // 从 socket_pair[0] 读取会阻塞
     printf("Read result: %s\n",buf);
     return EXIT_SUCCESS;    
 } 

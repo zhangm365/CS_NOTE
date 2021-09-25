@@ -71,6 +71,7 @@ int main( int argc, char *argv[] )
     }
 
     printf( "the client %d is coming\n", clnt_sock );
+    printf("Client Data: ip_addr is %s, port = %d\n", inet_ntoa(clnt_addr.sin_addr), ntohs(clnt_addr.sin_port));
 
     char send_msg[] = "hello client, I am server";
 

@@ -18,8 +18,8 @@
 
 小端字节序：一个整数的 **低位字节** 存储在 **内存的低地址**；
 大端字节序：一个整数的 **低位字节** 存储在 **内存的高地址**；
-主机字节序：计算机内部采用小端模式或大端模式存储；
-网络字节序：`TCP/IP` 协议规定数据在网络通信过程中的标准格式，以大端字节序存储；
+主机字节序：计算机内存采用小端模式或大端模式存储；
+网络字节序：`TCP/IP` 协议规定数据在网络通信过程中的标准格式，以 **大端字节序** 存储；
 
 判断大小端模式字节序的方法：使用联合体进行判断
 
@@ -122,22 +122,23 @@ struct in_addr
 };
 
 /*
-	@ desc: converts the Internet host address cp from the IPv4 numbers-and-dots notation into binary form (in network byte order) 			and stores it in the structure that inp points to.
-	@ return value: success for 1, 0 for fail.
-*/
-int inet_aton(const char *cp, struct in_addr *inp);	
-
-/*
 	@ converts the Internet host address cp from the IPv4 numbers-and-dots notation into binary data in network byte order.
 	@ return value: -1 for fail.
 	@ key: Use of this function is problematic because -1 is a valid address (255.255.255.255). So, avoid the its use in favor of 			inet_aton(), inet_pton();
 */
-in_addr_t inet_addr(const char *cp);
+	in_addr_t inet_addr(const char *cp);
+
+/*
+	@ desc: converts the Internet host address cp from the IPv4 numbers-and-dots notation into binary form (in network byte order) 			and stores it in the structure that inp points to.
+	@ return value: success for 1, 0 for fail.
+*/
+	int inet_aton(const char *cp, struct in_addr *inp);	
 
 /*
 	@ desc: The inet_ntoa() function converts the Internet host address in, given in network byte order, to a string in IPv4 dotted-		decimal notation. The string is returned in a statically allocated buffer, which subsequent calls will overwrite.
 */
-char *inet_ntoa(struct in_addr in);
+
+	char *inet_ntoa(struct in_addr in);
 
 ```
 
@@ -163,22 +164,23 @@ char *inet_ntoa(struct in_addr in);
 
 
 /*
-	The recv() call is normally used only on a connected socket
+	The recv() call and send() is normally used only on a connected socket：TCP
 */
 ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 ssize_t send(int sockfd, const void *buf, size_t len, int flags);
 
 /*
+	connectionless socket
 */
 ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen);
 ssize_t sendto(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen);
 
-
-ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
-ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags);
 /*
 	The recvmsg() call uses a msghdr structure to minimize the number of directly supplied arguments. This structure is defined as 			follows in <sys/socket.h>:
 */
+ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
+ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags);
+
 struct iovec {                    /* Scatter/gather array items */
     void  *iov_base;              /* Starting address */
     size_t iov_len;               /* Number of bytes to transfer */

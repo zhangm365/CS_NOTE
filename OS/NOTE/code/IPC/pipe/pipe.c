@@ -55,7 +55,7 @@ int main( int argc, char *argv[] )
         close(fd[0]);
         write( fd[1], argv[1], strlen(argv[1]) );
         close(fd[1]);	// 
-        wait(NULL);		// write for child
+        wait(NULL);		// wait for child exit
         
         exit(EXIT_SUCCESS);
     }

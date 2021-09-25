@@ -19,7 +19,7 @@ int main( int argc, char *argv[] )
         return -1;
     }
 
-    if( mkfifo( "/home/zhangmao/myFifo", 0644 ) == -1 )
+    if( mkfifo( "/home/zhangmao/myFIFO", 0644 ) == -1 )
     {
         if( errno != EEXIST )
         {
@@ -30,7 +30,7 @@ int main( int argc, char *argv[] )
     }
     
     
-    int fd = open("/home/zhangmao/myFifo", O_WRONLY);
+    int fd = open("/home/zhangmao/myFIFO", O_WRONLY);
 
     
     if( fd == -1 )
@@ -40,12 +40,14 @@ int main( int argc, char *argv[] )
     }
     
     printf("fd = %d\n", fd);
-    int w = write( fd, argv[1], strlen(argv[1]) );
+    int ret = write( fd, argv[1], strlen(argv[1]) );
     
-    if( w > 0 )
+    if( ret > 0 )
     {
-        fprintf(stdout, "send the %d bytes data : \n", w);
+        fprintf(stdout, "send the %d bytes data\n", ret);
     }
+
+    
     close(fd);	// 
     
     return 0;

@@ -9,7 +9,7 @@
 ## 1. 语法定义
 
 一个 `lambda` 表达式表示一个可调用的代码单元，可以理解为一个未命名的内联函数。
-与函数类似，一个 `lambda` 具有一个返回类型、一个参数列表和一个函数体，而 **`lambda` 表达式可以定义在函数内部**。因此，一个 `lambda` 表达式定义如下：
+与函数类似，一个 `lambda` 具有一个返回类型、一个参数列表和一个函数体，一个 `lambda` 表达式定义如下：
 **`[capture list](parameter list)->return type { function body }`**。
 >`capture list` (捕获列表) 是一个 `lambda` 所在函数中定义的局部变量的列表，通常为空。
 >`return type, parameter list, function body` 和普通函数一样，分别是返回类型、参数列表、函数体。

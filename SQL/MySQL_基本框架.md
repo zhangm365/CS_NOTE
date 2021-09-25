@@ -31,7 +31,7 @@ SELECT * FROM T WHERE ID = 5;
 
  2.    查询缓存
 
-       如果在缓存中找到这个`select`语句的结果缓存，则直接返回查询结果。否则
+       如果在缓存中找到这个`select`语句的结果缓存，直接返回查询结果，否则要执行后面的操作。
 
  3.    分析器
 
@@ -48,4 +48,10 @@ SELECT * FROM T WHERE ID = 5;
 ## 3. SQL 分组
 
 ​	`WHERE` 和 `HAVING` ：`WHERE` 过滤行，`HAVING` 过滤分组；即`WHERE`是**行级过滤**，`HAVING`是**组级过滤**。
+
+## 4. `DML` 和 `DDL` 操作
+
+`DML` 是 `Data Manipulation Language` 的缩写，即数据库中的数据处理操作，包括最常见的 `SELECT、INSERT、UPDATE、DELETE` 等语句，用于查询、存储、更新、删除数据库中的数据。
+
+`DDL` 是 `Data Definition Language` 的缩写，即处理数据库模式和描述，定义数据如何在数据库中存储。它包括常见的 `CREATE、ALTER、DROP、TRUNCATE` 等操作。
 
