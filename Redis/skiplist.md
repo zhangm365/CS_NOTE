@@ -13,10 +13,10 @@ typedef struct zskiplistNode {
     sds ele;    // sds 对象
     double score;    // 分值：按分值从小到大排序
     struct zskiplistNode *backward;    // 后退指针
-    struct zskiplistLevel {    // 层数数组
+    struct zskiplistLevel {    
         struct zskiplistNode *forward;    // 前进指针
         unsigned long span;    // 跨度：记录两个节点间的距离
-    } level[];
+    } level[];    // 层数数组
 }zskiplistNode; 
 ```
 
