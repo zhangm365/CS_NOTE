@@ -3,13 +3,13 @@
   - [1.1 类型](#11-类型)
   - [1.2 编码和底层实现](#12-编码和底层实现)
 
-# `redis` 对象
+# `Redis` 对象
 
-`redis` 数据库构造了一个对象系统，这个系统包括字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型。
+`Redis` 数据库构造了一个对象系统，这个系统包括字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型。
 
 # 1. 对象的类型和编码
 
-`redis` 中使用对象表示数据库中的键和值，每次创建一个键值对时，至少会创建两个对象，一个对象用于键值对的键（键对象），一个对象用于键值对的值（值对象）。`redis` 中的每个对象都由一个 `redisObject` 结构体表示，`type` 是类型属性、`encoding` 是编码属性、`ptr` 是指向底层实现数据结构的指针。
+`Redis` 中使用对象表示数据库中的键和值，每次创建一个键值对时，至少会创建两个对象，一个对象用于键值对的键（键对象），一个对象用于键值对的值（值对象）。`Redis` 中的每个对象都由一个 `redisObject` 结构体表示，`type` 是类型属性、`encoding` 是编码属性、`ptr` 是指向底层实现数据结构的指针。
 
 ```c
 // server.h
@@ -23,6 +23,8 @@ typedef struct redisObject {
     void *ptr;    // 指向实现数据结构的指针
 } robj;
 ```
+
+结构体中的三个变量`type`、`encoding`、`lru`使用了位域的定义方法，可以有效节省内存空间。这样，`redisObject`结构体占用`16`个字节空间。
 
 ## 1.1 类型
 
@@ -73,14 +75,14 @@ zset
 | `OBJ_STRING` |    `OBJ_ENCODING_INT`    |   使用整数值（`long`）实现的字符串对象   |
 | `OBJ_STRING` |  `OBJ_ENCODING_EMBSTR`   | 使用`embstr`编码的 `sds`实现的字符串对象 |
 | `OBJ_STRING` |    `OBJ_ENCODING_RAW`    |       使用 `sds` 实现的字符串对象        |
-|  `OBJ_LIST`  |  `OBJ_ENCODING_ZIPLIST`  |        使用压缩列表实现的列表对象        |
-|  `OBJ_LIST`  | `OBJ_ENCODING_QUICKLIST` |          使用快表实现的列表对象          |
-|  `OBJ_HASH`  |  `OBJ_ENCODING_ZIPLIST`  |        使用压缩列表实现的哈希对象        |
-|  `OBJ_HASH`  |    `OBJ_ENCODING_HT`     |          使用字典实现的哈希对象          |
-|  `OBJ_SET`   |  `OBJ_ENCODING_INTSET`   |        使用整数集合实现的集合对象        |
-|  `OBJ_SET`   |    `OBJ_ENCODING_HT`     |          使用字典实现的集合对象          |
-|  `OBJ_ZSET`  |  `OBJ_ENCODING_ZIPLIST`  |        使用压缩列表实现的有序集合        |
-|  `OBJ_ZSET`  | `OBJ_ENCODING_SKIPLIST`  |          使用跳表实现的有序集合          |
+|  `OBJ_LIST`  |  `OBJ_ENCODING_ZIPLIST`  |     使用 **压缩列表** 实现的列表对象     |
+|  `OBJ_LIST`  | `OBJ_ENCODING_QUICKLIST` |       使用 **快表** 实现的列表对象       |
+|  `OBJ_HASH`  |  `OBJ_ENCODING_ZIPLIST`  |     使用 **压缩列表** 实现的哈希对象     |
+|  `OBJ_HASH`  |    `OBJ_ENCODING_HT`     |       使用 **字典** 实现的哈希对象       |
+|  `OBJ_SET`   |  `OBJ_ENCODING_INTSET`   |     使用 **整数集合** 实现的集合对象     |
+|  `OBJ_SET`   |    `OBJ_ENCODING_HT`     |       使用 **字典** 实现的集合对象       |
+|  `OBJ_ZSET`  |  `OBJ_ENCODING_ZIPLIST`  |     使用 **压缩列表** 实现的有序集合     |
+|  `OBJ_ZSET`  | `OBJ_ENCODING_SKIPLIST`  |       使用 **跳表** 实现的有序集合       |
 
 命令`object encoding`可以查看值对象的编码类型：
 
