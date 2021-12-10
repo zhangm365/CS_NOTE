@@ -81,9 +81,65 @@ struct pollfd
 
 ## 3. `epoll `函数
 
+`epoll` 机制通过`epoll_create`在内核中创建一个红黑树来存储要监听的文件描述符，同时还会创建一个`rdlist` 的双向链表来存储就绪的事件。
+
 ### 3.1 `epoll_create1`
+
+```c
+NAME
+       epoll_create, epoll_create1 - open an epoll file descriptor
+
+SYNOPSIS
+       #include <sys/epoll.h>
+
+       int epoll_create(int size);    // 内核中创建一个 epoll 实例
+       int epoll_create1(int flags);
+
+```
 
 ### 3.2 `epoll_ctl`
 
+对内核中已创建的 `epoll` 实例（`epfd`）进行修改、新增和删除等操作。在红黑树上以`O(logN)`的时间复杂度对`fd`进行操作。
+
+`EPOLL_CTL_ADD`：在红黑树上新增要监听的 `fd`；
+
+`EPOLL_CTL_MOD`：修改红黑树中已有的`fd`；
+
+`EPOLL_CTL_DEL`：删除红黑树上的 `fd`。
+
+```c
+NAME
+    epoll_ctl - control interface for an epoll file descriptor
+
+SYNOPSIS
+    #include <sys/epoll.h>
+
+    int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+    
+    The "event" argument describes the object linked to the file descriptor "fd".  The "struct epoll_event" is defined as:
+    typedef union epoll_data {
+        void        *ptr;
+        int          fd;
+        uint32_t     u32;
+        uint64_t     u64;
+    } epoll_data_t;
+
+    struct epoll_event {
+        uint32_t     events;      /* Epoll events */
+        epoll_data_t data;        /* User data variable */
+    };
+```
+
 ### 3.3 `epoll_wait`
 
+采用多路复用机制对 `epoll` 实例中的多个 `fd` 进行同时监听。该函数一直阻塞到其中的一个或多个 `fd` 有就绪事件时，将就绪的 `fd` 添加到 `rdlist` 中，并返回已就绪事件的数目。
+
+```c
+NAME
+    epoll_wait, epoll_pwait - wait for an I/O event on an epoll file descriptor
+
+SYNOPSIS
+    #include <sys/epoll.h>
+    int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+
+```
