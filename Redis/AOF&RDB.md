@@ -13,7 +13,7 @@
 
 # `AOF & RDB`
 
-`AOF` 日志和 `RDB` 快照是 `redis` 中数据持久化的两种方式，保证了 `Redis` 数据库中的数据可靠性。
+`AOF` 日志和 `RDB` 快照是 `Redis` 中数据持久化的两种方式，保证了 `Redis` 数据库中数据的可靠性。
 
 因为`AOF`文件的更新频率通常比`RDB`文件更新频率高，所以：
 
@@ -127,11 +127,59 @@ Background saving started    # 后台创建子进程来生成 RDB 文件
 127.0.0.1:6379>
 ```
 
-创建`RDB`文件由`rdb.c/rdbSave`函数实现，执行命令后函数调用关系如下：
+创建`RDB`文件由`rdb.c/rdbSave`函数实现，执行命令`save`或 `bgsave` 后函数调用关系如下：
+
+`save` 命令：`rdb.c/saveCommand--->rdb.c/rdbSave`
+
+`bgsave` 命令：`rdb.c/bgsaveCommand--->rdb.c/rdbSaveBackground--->rdb.c/rdbsave`
 
 ![](./pics/rdb_1.png)
 
+最后执行 `RDB` 文件生成的是 `rdb.c/rdbSaveRio`。
+
 ## 2.2 `RDB`文件结构
+
+`RDB` 文件主要由三部分组成：
+
+![](./pics\rdb_3.png)
+
+查看 `RDB` 文件命令：`od -A x -t x1c -v xxx.dump`。例如如下 `RDB` 文件内容：
+
+```shell
+
+
+127.0.0.1:6379> flushall
+OK
+127.0.0.1:6379> set hello redis
+OK
+127.0.0.1:6379> hmset userinfo udi 1 name zs age 32
+OK
+127.0.0.1:6379> save    # 生成当前数据库的 RDB 文件
+OK
+
+root@linux:~# od -A x -t x1c -v dump.rdb    # 查看当前 RDB 文件内容
+000000  52  45  44  49  53  30  30  30  39  fa  09  72  65  64  69  73
+         R   E   D   I   S   0   0   0   9 372  \t   r   e   d   i   s
+000010  2d  76  65  72  05  36  2e  32  2e  36  fa  0a  72  65  64  69
+         -   v   e   r 005   6   .   2   .   6 372  \n   r   e   d   i
+000020  73  2d  62  69  74  73  c0  40  fa  05  63  74  69  6d  65  c2
+         s   -   b   i   t   s 300   @ 372 005   c   t   i   m   e 302
+000030  08  01  bc  61  fa  08  75  73  65  64  2d  6d  65  6d  c2  28
+        \b 001 274   a 372  \b   u   s   e   d   -   m   e   m 302   (
+000040  ae  0c  00  fa  0c  61  6f  66  2d  70  72  65  61  6d  62  6c
+       256  \f  \0 372  \f   a   o   f   -   p   r   e   a   m   b   l
+000050  65  c0  00  fe  00  fb  02  00  00  05  68  65  6c  6c  6f  05
+         e 300  \0 376  \0 373 002  \0  \0 005   h   e   l   l   o 005
+000060  72  65  64  69  73  0d  08  75  73  65  72  69  6e  66  6f  24
+         r   e   d   i   s  \r  \b   u   s   e   r   i   n   f   o   $
+000070  24  00  00  00  20  00  00  00  06  00  00  03  75  64  69  05
+         $  \0  \0  \0      \0  \0  \0 006  \0  \0 003   u   d   i 005
+000080  f2  02  04  6e  61  6d  65  06  02  7a  73  04  03  61  67  65
+       362 002 004   n   a   m   e 006 002   z   s 004 003   a   g   e
+000090  05  fe  20  ff  ff  67  cf  2f  7a  9a  c4  3c  62
+       005 376     377 377   g 317   /   z 232 304   <   b
+
+```
 
 `RDB`文件结构如下：
 
