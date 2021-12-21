@@ -8,6 +8,7 @@
     - [1.3.1 重写原理](#131-重写原理)
     - [1.3.2 实现方式](#132-实现方式)
     - [1.3.3 重写过程](#133-重写过程)
+    - [1.3.4 父子进程交互](#134-父子进程交互)
 - [2. `RDB` 快照](#2-rdb-快照)
   - [2.1 `RDB`文件的创建](#21-rdb文件的创建)
   - [2.2 `RDB`文件结构](#22-rdb文件结构)
@@ -192,6 +193,55 @@ int rewriteAppendOnlyFileBackground(void) {
     ...
 }
 ```
+### 1.3.4 父子进程交互
+
+`Redis` 主进程与 `AOF` 重写子进程通过 `OS` 提供的管道机制（`pipe`）进行数据的传输。
+在 `aof.c/rewriteAppendOnlyFileBackground` 中调用 `aofCreatePipes` 函数创建三个管道：
+```c
+// aof.c
+int rewriteAppendOnlyFileBackground(void) {
+    pid_t childpid;
+
+    if (hasActiveChildProcess()) return C_ERR;
+    if (aofCreatePipes() != C_OK) return C_ERR;    // 创建管道
+    ...
+}
+
+int aofCreatePipes(void) {
+    int fds[6] = {-1, -1, -1, -1, -1, -1};
+    
+    // 调用 pipe 创建三个管道
+    if (pipe(fds) == -1) goto error; /* parent -> children data. */
+    if (pipe(fds+2) == -1) goto error; /* children -> parent ack. */
+    if (pipe(fds+4) == -1) goto error; /* parent -> children ack. */
+    
+    /* Parent -> children data is non blocking. */
+    if (anetNonBlock(NULL,fds[0]) != ANET_OK) goto error;
+    if (anetNonBlock(NULL,fds[1]) != ANET_OK) goto error;
+    if (aeCreateFileEvent(server.el, fds[2], AE_READABLE, aofChildPipeReadable, NULL) == AE_ERR) goto error;
+    
+    server.aof_pipe_write_data_to_child = fds[1];
+    server.aof_pipe_read_data_from_parent = fds[0];
+    server.aof_pipe_write_ack_to_parent = fds[3];
+    server.aof_pipe_read_ack_from_child = fds[2];
+    server.aof_pipe_write_ack_to_child = fds[5];
+    server.aof_pipe_read_ack_from_parent = fds[4];
+    server.aof_stop_sending_diff = 0;
+    ...
+}
+```
+因此，三个管道的用途如下：
+1. `fd[0], fd[1]`：对应于主进程与重写子进程间进行传递操作命令；
+2. `fd[1], fd[2]`：对应于重写子进程向父进程发送 `ACK` 信息的管道；
+3. `fd[3], fd[4]`：对应于父进程向子进程发送 `ACK` 信息的管道。
+
+管道创建流程如下：
+![](./pics/aof_2.png)
+
+
+
+
+
 
 
 
