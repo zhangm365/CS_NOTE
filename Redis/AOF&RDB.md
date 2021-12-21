@@ -30,13 +30,12 @@
 
 ### 1.1.1 命令追加
 
-当`AOF`持久化功能打开后，服务器在执行完一个写命令后，会以协议格式将被执行的写命令追加到服务器状态的`aof_buf`缓存区：
+当`AOF`持久化功能打开后，服务器在执行完一个写命令后，会将被执行的写命令以协议格式追加到服务器状态的`aof_buf`缓存区：
 
 ```c
 struct redisServer {
-    ...    
-    // AOF缓冲区    
-    sds aof_buf;    
+    ...            
+    sds aof_buf;    // AOF缓冲区   
     ...
 };
 ```
@@ -60,9 +59,9 @@ OK
 
 `Redis`服务器进程是一个事件循环程序，循环中的文件事件负责接收客户端的命令请求。当服务器在处理文件事件的写命令时，就会将这些写命令追加到`aof_buf`缓存区。
 
-在服务器每次结束一个事件循环之前，它都会调用`flushAppendOnlyFile`函数，考虑是否将`aof_buf`缓存区中的内容写入和保存到`AOF`文件里。
+在服务器每次结束一个事件循环之前，它都会调用`aof.c/flushAppendOnlyFile`函数，考虑是否将`aof_buf`缓存区中的内容写入和保存到`AOF`文件里。
 
-服务器配置`appendfsync`选项的值决定`AOF`持久化功能的效率和安全性。它有以下三个选项：
+服务器配置`server.h/aof_fsync`选项的值决定`AOF`持久化功能的效率和安全性。它有以下三个选项：
 
 1. `always`：服务器每个事件循环都将`aof_buf`缓存区的内容写入`AOF`文件，并且立即同步`AOF`文件到磁盘；
 2. `everysec`：`...`，并且每隔`1`秒就要在子进程中对`AOF`文件进行一次同步；
@@ -94,19 +93,106 @@ OK
 
 当 `Redis server` 的写请求很多，`AOF` 会记录接收到的所有写操作，会导致`AOF`日志文件也会越来越大。
 
-为了避免 `AOF` 日志文件过大，`Redis` 会对 `AOF` 文件进行重写，即针对当前数据库每个键值对的最新内容，记录它的插入操作，不再记录它的历史写操作了，这样重写后的 `AOF` 日志会变小。
+为了避免 `AOF` 日志文件过大，`Redis` 会对 `AOF` 文件进行重写，即针对当前数据库每个键值对的最新内容，记录它的插入操作，不再记录它的历史写数据，这样重写后的 `AOF` 日志会变小，从而达到节约内存的目的。
 
 ### 1.3.1 重写原理
 
 `Redis`服务器将生成新的`AOF`文件来代替旧的`AOF`文件，服务器首先读取数据库中键的最新状态，然后用一条命令记录键值对，代替之前记录这个键值对的多条命令，从而实现对`AOF`重写的功能。
 
+`AOF` 重写日志是通过创建 **子进程** 来实际执行重写操作，这样可以避免阻塞主线程，减少对 `Redis` 整体性能的影响。在主进程执行写操作时，`AOF` 重写子进程会尽可能执行从主线程发来的写命令。
+
+父子进程间通信是通过 `pipe` 管道机制来通信的。建立的管道有 `3` 个：操作命令发送管道和 `2` 个`ACK` 信息发送管道。
+
 ### 1.3.2 实现方式
 
-`AOF` 重写日志是通过创建 **子进程** 来重写数据的，这样可以避免阻塞主线程，减少对 `Redis` 整体性能的影响。
+实现 `AOF` 重写的函数是 `aof.c/rewriteAppendOnlyFileBackground`，函数关系调用如下：
 
-在主进程执行写操作时，`AOF` 重写子进程会尽可能执行从主线程发来的写命令。父子进程间通信是通过 `pipe` 管道机制来通信的。
+![](./pics/aof_1.png)
 
-建立的管道有 `3` 个：操作命令发送管道和 `2` 个`ACK` 信息发送管道。
+对于 `aof.c/bgrewriteaofCommand` 函数，对应于 `Redis server` 上执行 `bgrewriteaof` 命令，即用户在客户端手动触发 `AOF` 文件重写。
+
+此时，执行 `AOF` 重写的时机：当前既没有 `AOF` 子进程也没有 `RDB` 子进程。
+
+```c
+// aof.c
+void bgrewriteaofCommand(client *c) {
+    if (server.aof_child_pid != -1) {
+        addReplyError(c,"Background append only file rewriting already in progress");
+    } else if (hasActiveChildProcess()) {    // 当没有 aof 子进程时，只判断是否 RDB 子进程
+        server.aof_rewrite_scheduled = 1;    // 有 RDB 子进程，将 AOF 重写设置为待调度运行
+        addReplyStatus(c,"Background append only file rewriting scheduled");
+    } else if (rewriteAppendOnlyFileBackground() == C_OK) {    // 执行 AOF 重写
+        addReplyStatus(c,"Background append only file rewriting started");
+    } else {
+        addReplyError(c,"Can't execute an AOF background rewriting. "
+                        "Please check the server logs for more information.");
+    }
+}
+```
+
+对于 `server.c/serverCron` 中有两处调用 `aof.c/rewriteAppendOnlyFileBackground`：
+
+```c
+// server.c
+int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
+	...
+    /* Start a scheduled AOF rewrite if this was requested by the user while
+     * a BGSAVE was in progress. */
+    if (!hasActiveChildProcess() && server.aof_rewrite_scheduled)    // AOF 重写已被设置为待调度
+    {
+        rewriteAppendOnlyFileBackground();
+    }
+    // 第二处
+    /* Trigger an AOF rewrite if needed. */
+    if (server.aof_state == AOF_ON &&    // 开启 AOF 功能
+        !hasActiveChildProcess() &&    // 没有 AOF 子进程或 RDB 子进程
+        server.aof_rewrite_perc &&     // 设置了 AOF 文件大小比例
+        server.aof_current_size > server.aof_rewrite_min_size)    // 当前文件已经超出 64M 
+    {
+        long long base = server.aof_rewrite_base_size ?
+            server.aof_rewrite_base_size : 1;
+        long long growth = (server.aof_current_size*100/base) - 100;
+        if (growth >= server.aof_rewrite_perc) {
+            serverLog(LL_NOTICE,"Starting automatic rewriting of AOF on %lld%% growth",growth);
+            rewriteAppendOnlyFileBackground();
+        }
+    }
+```
+
+### 1.3.3 重写过程
+
+在 `aof.c/rewriteAppendOnlyFileBackground` 中，会创建一个子进程调用 `aof.c/rewriteAppendOnlyFile` 进行 `AOF` 文件重写。
+
+```c
+// aof.c
+int rewriteAppendOnlyFileBackground(void) {
+    pid_t childpid;
+
+    if (hasActiveChildProcess()) return C_ERR;
+    if (aofCreatePipes() != C_OK) return C_ERR;
+    openChildInfoPipe();
+    if ((childpid = redisFork(CHILD_TYPE_AOF)) == 0) {    // 创建子进程
+        char tmpfile[256];
+
+        /* Child */
+        redisSetProcTitle("redis-aof-rewrite");
+        redisSetCpuAffinity(server.aof_rewrite_cpulist);
+        snprintf(tmpfile,256,"temp-rewriteaof-bg-%d.aof", (int) getpid());
+        if (rewriteAppendOnlyFile(tmpfile) == C_OK) {    // 执行 AOF 文件重写
+            sendChildCOWInfo(CHILD_TYPE_AOF, "AOF rewrite");
+            exitFromChild(0);
+        } else {
+            exitFromChild(1);
+        }
+    } else {
+        /* Parent */
+        ...
+    }
+    ...
+}
+```
+
+
 
 # 2. `RDB` 快照
 
@@ -135,7 +221,36 @@ Background saving started    # 后台创建子进程来生成 RDB 文件
 
 ![](./pics/rdb_1.png)
 
-最后执行 `RDB` 文件生成的是 `rdb.c/rdbSaveRio`。
+`rdb.c/rdbSaveBackground` 中会创建子进程来调用 `rdbSave`，最后执行 `RDB` 文件生成的是 `rdb.c/rdbSaveRio`。
+
+```c
+// rdb.c
+int rdbSaveBackground(char *filename, rdbSaveInfo *rsi) {
+    pid_t childpid;
+
+    if (hasActiveChildProcess()) return C_ERR;
+    server.dirty_before_bgsave = server.dirty;
+    server.lastbgsave_try = time(NULL);
+    openChildInfoPipe();
+
+    if ((childpid = redisFork(CHILD_TYPE_RDB)) == 0) {    // 创建子进程进行 RDB 文件的生成
+        int retval;
+
+        /* Child */
+        redisSetProcTitle("redis-rdb-bgsave");
+        redisSetCpuAffinity(server.bgsave_cpulist);
+        retval = rdbSave(filename,rsi);    // 调用 rdbSave 
+        if (retval == C_OK) {
+            sendChildCOWInfo(CHILD_TYPE_RDB, "RDB");
+        }
+        exitFromChild((retval == C_OK) ? 0 : 1);
+    } else {
+        /* Parent */
+       ...
+    }
+```
+
+
 
 ## 2.2 `RDB`文件结构
 
