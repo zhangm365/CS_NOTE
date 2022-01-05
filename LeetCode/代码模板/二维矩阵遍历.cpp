@@ -21,6 +21,8 @@ void dfs( const vector<vector<int>> &grid, int i, int j, vector<bool> &visited )
 
     if( visited[i][j] ) return;
 
+
+    // 进入节点
     visited[i][j] = true;
 
     dfs( grid, i-1, j, visited );    // 上
