@@ -1,0 +1,45 @@
+
+方法一：
+
+1. 下载最新安装包
+
+https://www.boost.org/
+
+例如下载 boost_1_78_0 版本：
+
+https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.7z
+
+2. 编译
+
+解压下载后的安装包，在命令行（win10 自带 cmd 或 VS2019 的 x64 Native Tools Command Prompt for VS 2019）
+以下运行以下命令：
+
+2.1 bootstrap.bat
+
+2.2 .\b2
+Boost 的根目录： D:\Program Files\boost_1_78_0
+生成 Boost lib的路径： D:\Program Files\boost_1_78_0\stage\lib
+
+
+2.3 b2 --build-dir=build/x64 address-model=64 threading=multi --build-type=complete --stagedir=./stage/x64 --toolset=msvc-14.2 -j 12
+
+生成 Boost lib的路径： D:\Program Files\boost_1_78_0\stage\x64\lib
+
+3. 添加环境变量
+
+BOOST_ROOT -------> D:\Program Files\boost_1_78_0
+BOOST_INCLUDEDIR -------> D:\Program Files\boost_1_78_0
+BOOST_LIBRARYDIR -------> D:\Program Files\boost_1_78_0\stage\x64\lib
+
+
+方法二：
+
+下载二进制文件进行安装：
+
+1. https://sourceforge.net/projects/boost/files/boost-binaries/
+
+boost_1_78_0-msvc-14.2-64.exe
+
+安装后在 boost 根目录下生成一个库目录：lib64-msvc-14.2
+
+将 BOOST_LIBRARYDIR 替换为 D:\Program Files\boost_1_78_0\lib64-msvc-14.2
