@@ -30,7 +30,7 @@ function sysCall_init()
 
             simBase=sim.getObject('/LBR_iiwa_7_R800')
             
-            simTip=sim.getObject('/tip')
+            simTip=sim.getObject('/LBR_iiwa_7_R800/tip')
             simTarget=sim.getObject('/target')
             
             --[[
@@ -95,26 +95,17 @@ function sysCall_init()
             -- get joint handles
             jointHandles={}
             for i=1,7,1 do
-                jointHandles[i]=sim.getObject('/LBR_iiwa_7_R800_joint'..i)
+                jointHandles[i]=sim.getObject('./LBR_iiwa_7_R800_joint'..i)
                 --sim.setJointTargetPosition(jointHandles[i],q0[i])
             end
             
             pd_pre = simExtCHAI3D_readPosition(0)
-            
-            --startPos = sim.getObjectPosition(simTarget, modelHandle)
+        
+            --targetPos_pre = sim.getObjectPosition(simTarget, modelHandle)
             
             sim.setObjectPosition(simTarget, modelHandle, pd_pre)
             
-            pd_pre = sim.getObjectPosition(simTarget, modelHandle)
-            
-            
             xd_pre = Matrix( 3, 1, {pd_pre[1], pd_pre[2], pd_pre[3]} )
-            
-            
-            tau = 0.2
-            mu = 0.1
-            alp = 0.1
-            gamma = 0.1
             
             dq_pre = Matrix( 7, 1, {0, 0, 0, 0, 0, 0, 0} )
             
@@ -125,11 +116,23 @@ function sysCall_init()
             
             -- filter variables
             dq_fp = Matrix( 7, 1, {0, 0, 0, 0, 0, 0, 0} )
-            xa_fp = xa_pre
+            --xa_fp = xa_pre
+            xa_fp = Matrix( 3, 1, {0, 0, 0} )
             va_fp = Matrix( 3, 1, {0, 0, 0} )
             
+            
+                        
+            
+            tau = 0.2
+            mu = 0.1
+            alp = 0.1
+            gamma = 0.1
             counter = 0
+            
             t1 = sim.getSimulationTime()
+            
+            -- damping factor
+            dampingFact = 0.8
             
         end
     end
@@ -161,8 +164,6 @@ function sysCall_sensing()
     
     print("------------------------------")
     
-    
-    
     --targetPos = sim.getObjectPosition(simTarget, modelHandle)
     
     --deltaPos = { pd[1]-pd_pre[1], pd[2]-pd_pre[2], pd[3]-pd_pre[3] }
@@ -171,7 +172,7 @@ function sysCall_sensing()
     
     sim.setObjectPosition(simTarget, modelHandle, pd)
     
-    pd = sim.getObjectPosition(simTarget, modelHandle)
+    --pd = sim.getObjectPosition(simTarget, modelHandle)
     
     xd = Matrix( 3, 1, {pd[1], pd[2], pd[3]} )
     
@@ -181,6 +182,8 @@ function sysCall_sensing()
     
     if CHAI3DPluginInitialized and (xd ~= xd_pre) then
         
+        --targetPos = sim.getObjectPosition(simTarget, modelHandle)
+        --targetPos_pre = targetPos
         
         t2 = sim.getSimulationTime()
         dt = t2 - t1
@@ -189,16 +192,17 @@ function sysCall_sensing()
         vd = (xd - xd_pre)/dt
         
         
+        
         -- get the actual position of the dummyTip
         pa = sim.getObjectPosition(simTip, modelHandle)
         xa = Matrix( 3, 1, {pa[1], pa[2], pa[3]} )
         
 
         JH_T = JH:t()
-        I_JH = Matrix:eye(3)
+        ID_J = Matrix:eye(3)
         
         -- 3X3
-        JH_sq = JH*JH_T + 0.01*I_JH    -- square matrix
+        JH_sq = JH*JH_T + (dampingFact*dampingFact)*ID_J    -- square matrix
         
         --JH_sd = JH_sq:det()    -- square det
         --print("------------------")
@@ -233,26 +237,26 @@ function sysCall_sensing()
         
         -- 1X1
         dq_T = dq:t()
-        I_dq = Matrix:eye(1)
+        ID_dq = Matrix:eye(1)
         
-        dq_sq = dq_T*dq + 0.01*I_dq    -- square matrix
+        dq_sq = dq_T*dq + (dampingFact*dampingFact)*ID_dq    -- square matrix
         
-        --dq_sd = dq_sq:det()    -- square det
-        --print("***********************")
-        --print("dq_sd = ", dq_sd)
+        --[[
+        dq_sd = dq_sq:det()    -- square det
+        print("***********************")
+        print("dq_sd = ", dq_sd)
         --[[if math.abs(dq_sd) < (1e-11) then
             dq_sq = dq_sq + 0.01*I_dq
         end--]] 
         --print(dq_sq:det())
-        --print("***********************")
-        
+        print("***********************")
+        --]]
         
         dq_inv = (dq_sq:inv())*dq_T
         dJH = (dva - JH*ddq_f + gamma*(va - JH*dq))*dq_inv
         
         
         q = q_pre + tau*dq
-        
         
         JH = JH_pre + tau*dJH
         
@@ -261,6 +265,7 @@ function sysCall_sensing()
             JH = JH_pre
         end
         
+
         for i=1,7,1 do
             sim.setJointTargetPosition(jointHandles[i],q[i])
         end 
@@ -273,8 +278,6 @@ function sysCall_sensing()
         
         --sim.setObjectPosition(simTarget, -1, newPos)
         
-        --I = I_pre + tau*mu*(md - ma)
-        --I* = I*_pre + tau*mu*(v - JH*dq)
         
         q_pre = q
         JH_pre = JH
@@ -288,8 +291,6 @@ function sysCall_sensing()
         dq_fp = dq_f
         xa_fp = xa_f
         va_fp = va_f
-        --I_pre = I
-        --I*_pre = I*
         
         
         --[[
