@@ -42,9 +42,11 @@ export PATH=$PATH:$GOPATH/bin
 
 1. 在命令行输入 `code .` 出现以下错误：
 
-`-bash: code: command not found`
+`zsh: command not found: code`
 
-这个错误表示 "code ." is not working in on the command line for Visual Studio Code on OS X/Mac
+这个错误表示 "code ." is not working in on the command line for Visual Studio Code on OS X/Mac。
+
+解决办法：
 
 在 vscode 中输入 `⌘⇧P` and type `shell command` to find the Shell Command:
 如下操作，然后 "Install 'code' command in PATH" 
@@ -62,6 +64,7 @@ export PATH=$PATH:$GOPATH/bin
 go env -w GO111MODULE=off
 
 ```
+
 
 
 
