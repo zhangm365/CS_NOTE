@@ -51,11 +51,12 @@ export PATH=$PATH:$GOPATH/bin
 在 vscode 中输入 `⌘⇧P` and type `shell command` to find the Shell Command:
 如下操作，然后 "Install 'code' command in PATH" 
 
-![](.\pics\vscode.png)
+
+![Image](https://github.com/zhangm365/CS_NOTE/raw/main/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/pics/vscode.png)
 
 
 
-2. 使用 go 命令，如 `go get ···` 等出现以下错误：
+1. 使用 go 命令，如 `go get ···` 等出现以下错误：
 
 "go: go.mod file not found in current directory or any parent directory; see 'go help modules'"
 
