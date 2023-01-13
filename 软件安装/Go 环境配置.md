@@ -12,10 +12,12 @@ https://go.dev/doc/install
 `Homebrew` 安装步骤
 
 ```Bash
+# 首先要成功安装 Homebrew 工具，可以从清华镜像网站安装。
+# https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/
 
 $ brew install go
 
-# 查看 Go 版本
+# 安装成功后，查看 Go 版本
 $ go version
 go version go1.19.5 darwin/arm64
 
@@ -35,10 +37,15 @@ Go 有一套特殊的惯例。
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+# Go 把文件放到三个目录：源码位于 .../src，包对象位于 .../pkg，编译好的程序位于 .../bin 目录下。
+mkdir -p $GOPATH/src $GOPATH/pkg $GOPATH/bin
+
 ```
 
 
 ### 2.1 vscode
+
+本文使用 vscode 编辑器作为学习 Go 语言的工具，以下是在 vscode 中配置 Go 插件的配置步骤。
 
 1. 在命令行输入 `code .` 出现以下错误：
 
@@ -56,7 +63,7 @@ export PATH=$PATH:$GOPATH/bin
 
 
 
-1. 使用 go 命令，如 `go get ···` 等出现以下错误：
+2. 使用 go 命令，如 `go get ···` 等出现以下错误：
 
 "go: go.mod file not found in current directory or any parent directory; see 'go help modules'"
 
@@ -66,9 +73,28 @@ go env -w GO111MODULE=off
 
 ```
 
+3. 解决 vscode 安装 Go Tools 失败问题
 
+在 vscode 中安装官方的 Go 插件后，然后软件会提示安装 Go Tools，但总会失败。
 
+```bash
+Installing github.com/cweill/gotests/... FAILED
+Installing github.com/fatih/gomodifytags FAILED
+Installing github.com/josharian/impl FAILED
+```
 
+解决方案：
+
+```bash
+
+$ go env -w GO111MODULE=on
+$ go env -w GOPROXY=https://goproxy.io,direct
+
+```
+
+References:
+- https://goproxy.io/zh/
+- https://github.com/microsoft/vscode-go/issues/3129
 
 
 
