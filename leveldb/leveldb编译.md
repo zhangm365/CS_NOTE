@@ -100,5 +100,4 @@ int main()
 
 编译成功并运行后，有以下输出：
 
-![](.\leveldb.png)
-
+![output](leveldb.png)
