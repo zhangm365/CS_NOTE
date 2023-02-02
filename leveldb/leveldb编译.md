@@ -1,14 +1,18 @@
 # `leveldb`编译
 
-# 1. `win10` 下编译
+`leveldb` 是一个快速的键值数据库，实现了从 `string key` 到 `string value` 的有序映射。
 
-## 1.1 `leveldb`源码下载
+## 1. `win10` 编译
+
+在 `win10` 操作系统编译步骤如下。
+
+### 1.1 `leveldb`源码下载
 
 打开[`leveldb`官方](https://github.com/google/leveldb)，然后下载源码：
 
 `git clone --recurse-submodules https://github.com/google/leveldb.git`
 
-## 1.2 使用`cmake` 和 `Visual Studio 2019`
+### 1.2 使用`cmake` 和 `Visual Studio 2019`
 
 `win10` 下需提前安装好`cmake`和 `vs2019`。
 
@@ -26,26 +30,27 @@ cmake -G "Visual Studio 16" ..
 
 命令执行后，会在`build`目录下生成`leveldb.sln`方案，使用`vs2019`打开，选择`Release、x64`配置，然后编译整个项目直到成功，在`build/Release`目录下生成一个`64`位的`leveldb.lib`库文件。
 
-## 1.3 测试
+### 1.3 测试
 
 新建一个项目文件，添加一个源码`cpp`文件。在项目属性中`Configuration Properties`配置以下选项：
 
-### 1.3.1 ` C/C++` 配置
+#### 1.3.1 `C/C++` 配置
 
 `General -> Additional Include Directories`中加入`leveldb`源码的路径：
 
 ```c++
-...\leveldb 
-...\leveldb\include    // leveldb 源码的头文件
+.\src\leveldb 
+.\src\leveldb\include    // leveldb 源码的头文件
+
 ```
 
-### 1.3.2 `Linker` 配置
+#### 1.3.2 `Linker` 配置
 
-`General -> Additional Library Directories` 中加入库`leveldb.lib`的路径：`...\leveldb\build\Release`。
+`General -> Additional Library Directories` 中加入库`leveldb.lib`的路径：`.\src\leveldb\build\Release`。
 
 `Input -> Additional Dependencies`中添加库名`leveldb.lib`。
 
-### 1.3.3 代码测试
+#### 1.3.3 代码测试
 
 在配置完项目属性后，源码文件中加入以下代码：
 
@@ -56,44 +61,44 @@ cmake -G "Visual Studio 16" ..
 
 int main()
 {
-	leveldb::DB* db;
-	leveldb::Options options;
-	options.create_if_missing = true;
-	std::string dbpath = "testdb";
-	leveldb::Status s = leveldb::DB::Open(options, dbpath, &db);	// 打开一个 leveldb 数据库, 对应于当前路径下 testdb 目录
-	assert(s.ok());
-	std::string key1 = "test";
-	std::string val = "test_value";
+    leveldb::DB* db;
+    leveldb::Options options;
+    options.create_if_missing = true;
+    std::string dbpath = "testdb";
+    leveldb::Status s = leveldb::DB::Open(options, dbpath, &db);    // 打开一个 leveldb 数据库, 对应于当前路径下 testdb 目录
+    assert(s.ok());
+    std::string key1 = "test";
+    std::string val = "test_value";
 
-	s = db->Put(leveldb::WriteOptions(), key1, val);	// 在数据库中插入(key1, val)键值对
-	std::cout << s.ok() << std::endl;
-	std::string key2;
-	s = db->Get(leveldb::ReadOptions(), key1, &val);	// 获取键key对应的值val
-	std::cout << s.ok() << std::endl;
-	std::cout << val << std::endl;
-	
-	/*
-	if (s.ok())    // 将key1对应的值改为key2的值
-	{
-		s = db->Put(leveldb::WriteOptions(), key2, val);
-		s = db->Delete(leveldb::WriteOptions(), key1);
-	}
-	*/
+    s = db->Put(leveldb::WriteOptions(), key1, val);    // 在数据库中插入(key1, val)键值对
+    std::cout << s.ok() << std::endl;
+    std::string key2;
+    s = db->Get(leveldb::ReadOptions(), key1, &val);    // 获取键key对应的值val
+    std::cout << s.ok() << std::endl;
+    std::cout << val << std::endl;
+    
+    /*
+    if (s.ok())    // 将key1对应的值改为key2的值
+    {
+        s = db->Put(leveldb::WriteOptions(), key2, val);
+        s = db->Delete(leveldb::WriteOptions(), key1);
+    }
+    */
 
-	if (s.ok())    // 使用WriteBatch类原子性地提交一组更新
-	{
-		leveldb::WriteBatch batch;
-		batch.Delete(key1);    // 删除键key1
-		batch.Put(key2, val);    // 插入键值对（key2，val）
-		s = db->Write(leveldb::WriteOptions(), &batch);
-	}
+    if (s.ok())    // 使用WriteBatch类原子性地提交一组更新
+    {
+        leveldb::WriteBatch batch;
+        batch.Delete(key1);    // 删除键key1
+        batch.Put(key2, val);    // 插入键值对（key2，val）
+        s = db->Write(leveldb::WriteOptions(), &batch);
+    }
 
-	std::cout << s.ok() << std::endl;
-	
-	s = db->Get(leveldb::ReadOptions(), key2, &val);
-	std::cout << s.ok() << " " << val << std::endl;
-	delete db;    // close db
-	return 0;
+    std::cout << s.ok() << std::endl;
+    
+    s = db->Get(leveldb::ReadOptions(), key2, &val);
+    std::cout << s.ok() << " " << val << std::endl;
+    delete db;    // close db
+    return 0;
 }
 
 ```
