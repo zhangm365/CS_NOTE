@@ -1,4 +1,4 @@
-# `leveldb`编译
+# `leveldb`编译与使用
 
 `leveldb` 是一个快速的键值数据库，实现了从 `string key` 到 `string value` 的有序映射。
 
@@ -19,8 +19,7 @@
 在`vs2019`目录下的`x64 Native Tools Command Prompt for VS 2019`终端命令行执行：
 
 ```shell
-mkdir build
-cd build
+mkdir build && cd build
 cmake -G "Visual Studio 16" ..
 ```
 
@@ -106,3 +105,42 @@ int main()
 编译成功并运行后，有以下输出：
 
 ![output](leveldb.png)
+
+## 2. mac 编译
+
+`mac` 使用如下命令编译源码成功后，在 `build` 目录下生成库文件 `libleveddb.a`。
+
+```shell
+
+mkdir -p build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+# 安装 leveldb
+make install
+
+#
+brew install leveldb
+
+```
+
+## 3. 代码
+
+新建一个文件夹，然后创建测试源码文件。编译如下：
+
+```shell
+# 方法 1：编译源码，每次手动链接头文件和库文件
+# -I../src/leveldb/include/： 链接源码 include/ 目录
+# -L../src/leveldb/build/：链接编译生成的 libleveldb.a 库文件
+g++ -o test test.cpp -lleveldb -lpthread -I../src/leveldb/include/ -L../src/leveldb/build/ -std=c++11
+
+
+# 方法 2：将头文件和库文件复制到 /usr/local/ 系统目录，以后无须手动链接。
+# 复制头文件
+sudo cp -r ./src/leveldb/include /usr/local/include/
+
+# 复制库文件
+sudo cp ./src/leveldb/build/libleveldb.a /usr/local/lib/
+
+
+# 以后编译命令如下：
+g++ -o test test.cpp -lleveldb -lpthread -std=c++11
+```
