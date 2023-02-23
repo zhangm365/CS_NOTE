@@ -108,13 +108,14 @@ int main()
 
 ## 2. mac 编译
 
-`mac` 使用如下命令编译源码成功后，在 `build` 目录下生成库文件 `libleveddb.a`。
+`mac` 系统的安装较简单。
+使用如下命令编译源码成功后，将在 `build` 目录下生成库文件 `libleveddb.a`。
 
 ```shell
 
 mkdir -p build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
-# 安装 leveldb
+# 安装 leveldb 库
 make install
 
 #
@@ -130,17 +131,17 @@ brew install leveldb
 # 方法 1：编译源码，每次手动链接头文件和库文件
 # -I../src/leveldb/include/： 链接源码 include/ 目录
 # -L../src/leveldb/build/：链接编译生成的 libleveldb.a 库文件
-g++ -o test test.cpp -lleveldb -lpthread -I../src/leveldb/include/ -L../src/leveldb/build/ -std=c++11
+# g++ -o test test.cpp -lleveldb -lpthread -I../src/leveldb/include/ -L../src/leveldb/build/ -std=c++11
 
 
 # 方法 2：将头文件和库文件复制到 /usr/local/ 系统目录，以后无须手动链接。
 # 复制头文件
-sudo cp -r ./src/leveldb/include /usr/local/include/
+# sudo cp -r ./src/leveldb/include /usr/local/include/
 
 # 复制库文件
-sudo cp ./src/leveldb/build/libleveldb.a /usr/local/lib/
+# sudo cp ./src/leveldb/build/libleveldb.a /usr/local/lib/
 
 
-# 以后编译命令如下：
+# 编译命令
 g++ -o test test.cpp -lleveldb -lpthread -std=c++11
 ```
