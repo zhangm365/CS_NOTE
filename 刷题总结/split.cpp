@@ -7,7 +7,7 @@ using namespace std;
 
 
 /*
-    将源字符串按分割符进行分割
+    @brief: 将源字符串按分割符进行分割
     @param s: the origin string
     @param delim: the delim char
     @return: the result string
@@ -26,7 +26,13 @@ vector<string> split(const string& s, char delim) {
             res.emplace_back(item);
         }
     }
-
+    
+    /* version 2:
+    while(!ss.eof()) {
+        getline(ss, item, delim);
+        res.emplace_back(item);
+    }
+    */
     return res;
 
 }
