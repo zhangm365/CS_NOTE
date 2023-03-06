@@ -1,15 +1,15 @@
-- [MySQL binlog&redolog](#mysql-binlogredolog)
+- [MySQL binlog&redo log](#mysql-binlogredolog)
   - [1. binlog 写入机制](#1-binlog-写入机制)
     - [1.1 `binlog` 写入逻辑](#11-binlog-写入逻辑)
     - [1.2 binlog cache 内存](#12-binlog-cache-内存)
     - [1.3 sync_binlog 参数](#13-sync_binlog-参数)
-  - [2. redolog 写入机制](#2-redolog-写入机制)
+  - [2. redo log 写入机制](#2-redo log-写入机制)
     - [2.1 `redo log` 写入逻辑](#21-redo-log-写入逻辑)
     - [2.2  `innodb_log_buffer_size`](#22--innodb_log_buffer_size)
     - [2.3 `innodb_flush_log_at_trx_commit` 参数](#23-innodb_flush_log_at_trx_commit-参数)
     - [2.4 innodb_flush_log_at_timeout](#24-innodb_flush_log_at_timeout)
 
-# MySQL binlog&redolog
+# MySQL binlog&redo log
 
 [MySQL 23 讲](https://time.geekbang.org/column/article/76161)
 
