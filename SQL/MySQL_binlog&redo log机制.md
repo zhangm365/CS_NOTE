@@ -6,7 +6,7 @@
   - [2. redo log 写入机制](#2-redo log-写入机制)
     - [2.1 `redo log` 写入逻辑](#21-redo-log-写入逻辑)
     - [2.2  `innodb_log_buffer_size`](#22--innodb_log_buffer_size)
-    - [2.3 `innodb_flush_log_at_trx_commit`](#23-innodb_flush_log_at_trx_commit-参数)
+    - [2.3 `innodb_flush_log_at_trx_commit`](#23-innodb_flush_log_at_trx_commit)
     - [2.4 `innodb_flush_log_at_timeout`](#24-innodb_flush_log_at_timeout)
 
 # MySQL binlog&redo log
