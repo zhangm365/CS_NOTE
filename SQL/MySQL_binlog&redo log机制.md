@@ -50,7 +50,7 @@
 
 `InnoDB` 中控制 `redo log buffer` 的大小，默认是 `16M`。`redo log buffer` 内存是全局共享的。
 
-### 2.3 `innodb_flush_log_at_trx_commit` 参数
+### 2.3 `innodb_flush_log_at_trx_commit`
 
 为了控制 `redo log` 的写入策略，`InnoDB` 提供了 `innodb_flush_log_at_trx_commit` 参数，有以下几种取值：
 
