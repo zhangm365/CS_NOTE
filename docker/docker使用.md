@@ -14,6 +14,7 @@ docker exec -it ubuntu-name /bin/bash
 ```
 
 # 新建容器并共享宿主主机的文件夹
+
 ```bash
 # -v 指定主机的目录/aaa 和 docker容器路径/BBB
 docker run --name ubuntu-name -ti -v /AAA:/BBB -p 80:80 -d ubuntu
