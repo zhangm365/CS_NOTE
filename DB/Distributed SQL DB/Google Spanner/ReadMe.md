@@ -1,5 +1,5 @@
 
-The basic concept of the Google Spanner.
+# The basic concept of the Google Spanner.
 
 # 1. `BigTable`
 
