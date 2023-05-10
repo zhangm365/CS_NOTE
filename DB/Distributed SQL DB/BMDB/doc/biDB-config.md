@@ -25,6 +25,7 @@
 # 扩容 Master 节点
 # 1. 设置环境变量，ADDRS 保存集群中已存在的 Master 节点信息
 export ADDRS=192.168.50.249:7100,192.168.50.81:7100,192.168.50.152:7100
+
 # 2. 通过 bi-admin 增加 Master 节点，新增节点为：192.168.50.155 7100
 ./bi-admin -master_addresses $ADDRS change_master_config ADD_SERVER 192.168.50.155 7100
 
