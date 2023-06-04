@@ -5,8 +5,13 @@
 
 1.1. 数据模型(data model)
 
-数据模型用于描述数据库中数据的概念集合。
-例如，关系型（最常见），`NoSQL`(key/value, graph)，array/matrix/vectors
+数据模型用于描述数据库中数据的概念集合，定义如何对数据进行组织。
+例如：
+
+- 关系型（最常见）
+例如 MySQL、PostgreSQL 等。
+- `NoSQL`(Key/Value, Graph, Document, Column-family 等)
+- 机器学习（array/matrix/vectors）
 
 1.2. 模式(schema)
 
