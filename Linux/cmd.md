@@ -70,3 +70,20 @@ echo "deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted univ
 # 根据进程名搜索 process_name，并杀死对应的进程
 kill $(ps aux | grep 'process_name' | awk '{print $2}')
 ```
+
+# 4. git config
+
+1. 查看 proxy 信息：
+`chrome://net-export/`
+
+2. 查看 git config 信息：
+`git config --list`
+
+3. 配置 git http.proxy：
+`git config --global http.proxy http[s]://proxyaddress:port`
+
+   - 或者配置为空：
+`git config --global http.proxy ""`
+
+   - 或者取消 proxy：
+`git config --global --unset http.proxy`
