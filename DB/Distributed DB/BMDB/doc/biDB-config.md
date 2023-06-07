@@ -10,7 +10,7 @@
 # tserver.conf:
 --tserver_master_addrs=192.168.50.247:7100,192.168.50.193:7100,192.168.50.236:7100   # /分布式 master IP 地址
 --rpc_bind_addresses=192.168.50.236:9100                                             # 本机 IP
---enable_ysql
+--enable_bsql
 --pgsql_proxy_bind_address=0.0.0.0:5433
 --cql_proxy_bind_address=0.0.0.0:9042
 --fs_data_dirs=/home/bigmath/disk1
@@ -18,8 +18,8 @@
 --bsql_enable_auth=true
 
 # 运行命令
-./bi-master --flagfile master.conf >& /home/bigmath/disk1/yb-master.out &
-./bi-tserver --flagfile tserver.conf >& /home/bigmath/disk1/yb-tserver.out &
+nohup ./bm-master --flagfile master.conf >& /home/bigmath/disk1/bm-master.out &
+nohup ./bm-tserver --flagfile tserver.conf >& /home/bigmath/disk1/bm-tserver.out &
 
 
 # 扩容 Master 节点
@@ -45,8 +45,8 @@ Tablet Server UUID    RPC Host/Port     Heartbeat delay    Status   Reads/s  Wri
     ...           192.168.50.81:9100      0.94s           ALIVE     0.00     0.00
 
 
-bigmath@bigmath-virtual-machine:~/biginsights-0.1/bin$ ./bi-admin -master_addresses $ADDRS change_master_config REMOVE_SERVER 192.168.50.155 7100
-bigmath@bigmath-virtual-machine:~/biginsights-0.1/bin$ ./bi-admin -master_addresses $ADDRS list_all_masters
+bigmath@bigmath-virtual-machine:~/biginsights-0.1/bin$ ./bm-admin -master_addresses $ADDRS change_master_config REMOVE_SERVER 192.168.50.155 7100
+bigmath@bigmath-virtual-machine:~/biginsights-0.1/bin$ ./bm-admin -master_addresses $ADDRS list_all_masters
 Master UUID    RPC Host/Port         State     Role  Broadcast Host/Port 
     ...      192.168.50.249:7100   ALIVE     LEADER     N/A                 
     ...      192.168.50.81:7100    ALIVE     FOLLOWER   N/A                 

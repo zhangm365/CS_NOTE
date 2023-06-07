@@ -1,0 +1,26 @@
+# 阅读 LSM-tree 文献笔记
+
+## 1. LSM-tree 概念
+
+高性能的事务型交易系统主要包括两个典型的任务：
+
+- 往历史表中插入新的行数据；
+- 生成日志记录以备系统恢复。
+
+上述两种数据信息均依赖于有效的索引结构。
+
+1. 标准地基于磁盘的索引，例如 B-tree 结构，因为需要实时地维护索引结构，将会有效地增加事务的 I/O 成本。
+
+2. Log-Structured Merge-tree(LSM-tree) 是一种基于磁盘的数据结构，旨在为较长周期内记录插入（或删除）率较高的文件提供一种低成本的索引结构。
+
+3. LSM-tree 使用一种算法来延迟和批处理索引更改，以一种类似于归并排序的高效方式将更改从基于内存的组件级联到一个或多个磁盘组件。
+
+这个算法极大地减少了磁盘臂的移动次数（相比于 B-tree），并将在使用传统访问方法插入的磁盘臂成本超过存储介质成本的领域中提高了性价比。
+
+## 2. LSM-tree 使用场景
+
+LSM-tree 适合在索引插入更常见的场景中使用。因为，需要立即响应的索引查找将失去 I/O 效率。
+
+insert into employees values (1, 'joe', '56 grove st', 20000, PGP_PUB_ENCRYPT('AC-22001', dearmor(pg_read_file('/home/bigmath/code/bigmath-db/bin/public_key.txt'))));
+
+select PGP_PUB_DECRYPT(account_number::bytea,dearmor(pg_read_file('/home/bigmath/code/bigmath-db/bin/private_key.txt')),'PRIVATE-KEY-PASSWORD') as AccountNumber from employees;

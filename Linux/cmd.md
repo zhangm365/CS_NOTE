@@ -1,7 +1,7 @@
 
 # `Linux` 常见命令
 
-# 1. 将终端输出内容重定向到文件
+## 1. 将终端输出内容重定向到文件
 
 ```bash
 # >&: 表示将标准输出和标出错误重定向到 file 文件，最后的 &: 表示当前命令以后台的方式执行
@@ -31,7 +31,7 @@ fi
 
 ```
 
-# 2. ubuntu 修改镜像源
+## 2. ubuntu 修改镜像源
 
 Ubuntu 的软件源配置文件是 `/etc/apt/sources.list`。将系统自带的该文件做个备份，将该文件替换为下面内容，即可使用选择的软件源镜像。
 
@@ -49,7 +49,7 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted
 # deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
 # # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
 
-deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+# deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
 # deb-src http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
 
 ```
@@ -61,17 +61,16 @@ deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe m
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
-echo "deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
 ```
 
-# 3. 终止进程
+## 3. 终止进程
 
 ```shell
 # 根据进程名搜索 process_name，并杀死对应的进程
 kill $(ps aux | grep 'process_name' | awk '{print $2}')
 ```
 
-# 4. git config
+## 4. git config
 
 1. 查看 proxy 信息：
 `chrome://net-export/`
