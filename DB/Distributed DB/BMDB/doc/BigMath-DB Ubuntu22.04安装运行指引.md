@@ -138,7 +138,7 @@ $ cd
 $ mkdir tmp_work
 $ scp bigmath@192.168.50.150:~/tmp_work/bigmath-thirdparty.tar.gz ~/tmp_work/
 # 文件较大，拷贝需要一点时间
-$ tar -xvf bigmath-thirdparty-clang15.tar.gz
+$ tar -xvf bigmath-thirdparty.tar.gz
 ```
 
 建立`/opt/bm-build`目录及设置环境变量
@@ -155,6 +155,7 @@ $ export BM_THIRDPARTY_DIR=~/tmp_work/bigmath-thirdparty
 
 ```shell
 $ cd ~/code/bigmath-db
+# 不必使用 sudo 编译。编译 debug 版本使用参数: debug
 $ ./bm_build.sh release
 ```
 

@@ -21,6 +21,6 @@
 
 LSM-tree 适合在索引插入更常见的场景中使用。因为，需要立即响应的索引查找将失去 I/O 效率。
 
-insert into employees values (1, 'joe', '56 grove st', 20000, PGP_PUB_ENCRYPT('AC-22001', dearmor(pg_read_file('/home/bigmath/code/bigmath-db/bin/public_key.txt'))));
+## 3. 索引日志
 
-select PGP_PUB_DECRYPT(account_number::bytea,dearmor(pg_read_file('/home/bigmath/code/bigmath-db/bin/private_key.txt')),'PRIVATE-KEY-PASSWORD') as AccountNumber from employees;
+随着交易流系统中不断增加的长事务，索引日志访问变得越来越重要。
