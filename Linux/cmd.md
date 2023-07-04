@@ -46,8 +46,8 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted u
 deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
 # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
 
-# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
-# # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
 
 # deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
 # deb-src http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
@@ -61,6 +61,8 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
+echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list > /dev/null
+
 ```
 
 ## 3. 终止进程
