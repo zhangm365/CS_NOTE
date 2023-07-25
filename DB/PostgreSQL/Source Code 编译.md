@@ -36,19 +36,3 @@ su - postgres
 # 在根目录的 configure 文件中查看版本号
 PACKAGE_VERSION
 ```
-
-## 3. 程序运行时缺少某些动态库
-
-```bash
-# 运行某个可执行程序时，提示缺少某个动态库，例如 libpq.so.5
-$ symbol lookup error: /usr/local/lib/libpq.so.5: undefined symbol: _Z13libpq_reallocPvmm
-
-# 查看该动态库的依赖关系
-$ ldd /usr/local/lib/libpq.so.5
-
-# 使用解码 c++ 名称修饰的实用程序 c++filt 查看编码后的符号名
-$ c++filt _Z13libpq_reallocPvmm
-libpq_realloc(void*, unsigned long, unsigned long)
-# 查看该动态库的符号表
-$ nm -A /usr/local/lib/libpq.so.5 | grep libpq_realloc
-```
