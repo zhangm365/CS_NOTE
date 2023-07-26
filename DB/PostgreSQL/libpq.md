@@ -11,7 +11,7 @@
 ## 2. 程序运行时缺少某些动态库
 
 ```bash
-# 运行某个可执行程序时，提示缺少某个动态库，例如 libpq.so.5
+# 运行某个可执行程序时，提示缺少某个动态库，例如以下提示错误： libpq.so.5
 $ symbol lookup error: /usr/local/lib/libpq.so.5: undefined symbol: _Z13libpq_reallocPvmm
 
 # 查看该动态库的依赖关系
