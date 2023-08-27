@@ -4,6 +4,11 @@ insert into student values (53666, 'Kanye', 'kanye@cs', 44, 4.0),
         (53655, 'Tupac', 'shakur@cs', 25, 3.5)
         ;
 
+insert into student values (53633, 'John', 'john@cs', 24, 4.0),
+        (53611, 'Apple', 'apple@cs', 30, 3.9),
+        (53600, 'Google', 'google@cs', 25, 3.5)
+        ;
+
 insert into course values ('15-445', 'Database Systems'),
         ('15-721', 'Advanced Database Systems'),
         ('15-826', 'Data Mining'),
