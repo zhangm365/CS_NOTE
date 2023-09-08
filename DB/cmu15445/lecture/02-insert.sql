@@ -21,25 +21,25 @@ CREATE TABLE enrolled (
 insert into student values (53666, 'Kanye', 'kanye@cs', 44, 4.0),
         (53688, 'Bieber', 'jbieber@cs', 27, 3.9),
         (53655, 'Tupac', 'shakur@cs', 25, 3.5)
-        ;
+;
 
 insert into student values (53633, 'John', 'john@cs', 24, 4.0),
         (53611, 'Apple', 'apple@cs', 30, 3.9),
         (53600, 'Google', 'google@cs', 25, 3.5)
-        ;
+;
 
 insert into course values ('15-445', 'Database Systems'),
         ('15-721', 'Advanced Database Systems'),
         ('15-826', 'Data Mining'),
         ('15-799', 'Special Topics in Databases')
-        ;
+;
 
 insert into enrolled values (53666, '15-445', 'C'),
         (53688, '15-721', 'A'),
         (53688, '15-826', 'B'),
         (53655, '15-445', 'B'),
         (53666, '15-721', 'C')
-        ;
+;
 
 
 -- NESTED QUERIES
@@ -52,16 +52,18 @@ select sid, name from student where sid in (select max(sid) from enrolled);
 -- method 2
 SELECT sid, name FROM student
     WHERE sid IN (
-    SELECT sid FROM enrolled
-    ORDER BY sid DESC LIMIT 1
-);
+        SELECT sid FROM enrolled
+        ORDER BY sid DESC LIMIT 1
+    )
+;
 
 -- method 3
 SELECT student.sid, name
     FROM student
     JOIN (SELECT MAX(sid) AS sid
     FROM enrolled) AS max_e
-        ON student.sid = max_e.sid;
+        ON student.sid = max_e.sid
+;
 
 -- Find all courses that have no students enrolled in it.
 select course.cid from course where course.cid not in (
