@@ -23,4 +23,11 @@ sudo echo "1" > /proc/sys/kernel/core_uses_pid
 
 ```bash
 gdb 程序名 corefile
+
+info proc mappings
+
+info files
+
+
+
 ```

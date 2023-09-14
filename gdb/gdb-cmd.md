@@ -4,6 +4,10 @@
 ## 1.常用命令
 
 ```bash
+
+# 将 gdb 中执行命令的输出重定向到文件中
+set logging enabled on
+
 # help
 gdb> help info proc
 # 查看内存布局

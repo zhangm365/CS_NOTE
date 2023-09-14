@@ -2,7 +2,6 @@
 
 ## 1. `lldb` 配置文件
 
-```bash
 ```json
 {
     // 使用 IntelliSense 了解相关属性。 
