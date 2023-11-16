@@ -22,7 +22,7 @@ autovacuum = off
 使用如下命令检查程序 `postgres` 的内存状态：
 
 ```bash
-valgrind --leak-check=no --gen-suppressions=all \
+valgrind --leak-check=full --gen-suppressions=all \
     --suppressions=src/tools/valgrind.supp --time-stamp=yes \
     --error-markers=VALGRINDERROR-BEGIN,VALGRINDERROR-END \
     --log-file=$HOME/pg-valgrind/%p.log --trace-children=yes \
@@ -35,10 +35,20 @@ valgrind --leak-check=no --gen-suppressions=all \
 如下是调试进程 `/home/bigmath/code/bigmath-db-crypt/build/debug-clang15-dynamic-ninja/postgres/bin/postgres` 的具体命令：
 
 ```bash
-valgrind --leak-check=no --gen-suppressions=all \
+valgrind --leak-check=yes --gen-suppressions=all \
     --suppressions=/home/bigmath/code/bigmath-db-crypt/src/postgres/src/tools/valgrind.supp --time-stamp=yes \
     --error-markers=VALGRINDERROR-BEGIN,VALGRINDERROR-END \
     --log-file=$HOME/pg-valgrind/%p.log --trace-children=yes \
     /home/bigmath/code/bigmath-db-crypt/build/debug-clang15-dynamic-ninja/postgres/bin/postgres --log_line_prefix="%m %p " \
-    --log_statement=all --shared_buffers=64MB -D /home/bigmath/disk2/pg_data -c config_file=/home/bigmath/disk2/pg_data/bsql_pg.conf -c hba_file=/home/bigmath/disk2/pg_data/bsql_hba.conf 2>&1 | tee $HOME/pg-valgrind/postmaster.log
+    --log_statement=all --shared_buffers=128MB -D /home/bigmath/disk2/pg_data -c config_file=/home/bigmath/disk2/pg_data/bsql_pg.conf -c hba_file=/home/bigmath/disk2/pg_data/bsql_hba.conf 2>&1 | tee $HOME/pg-valgrind/postmaster.log
+```
+
+以下是客户端的可执行程序 `bsqlsh` 的命令，其中文件 `~/valgrind_bsqlsh.sql` 是需要执行的 sql 语句：
+
+```bash
+valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all \
+    --suppressions=/home/bigmath/code/bigmath-db-crypt/src/postgres/src/tools/valgrind.supp --time-stamp=yes \
+    --error-markers=VALGRINDERROR-BEGIN,VALGRINDERROR-END \
+    --log-file=$HOME/pg-valgrind/log/%p.log --trace-children=yes \
+    /home/bigmath/code/bigmath-db-crypt/build/latest/postgres/bin/bsqlsh -C -f /home/bigmath/pg-valgrind/test_sql/create_cmk.sql 2>&1 | tee $HOME/pg-valgrind/postmaster.log
 ```
