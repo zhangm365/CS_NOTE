@@ -9,7 +9,7 @@
 
 1. `postgresql.conf`
 
-当运行 `valgrind` 工具时，可以关闭 [`autovacuum`](https://www.postgresql.org/docs/current/routine-vacuuming.html) 后台守护进程。
+当运行 `Valgrind` 工具时，可以关闭 [`autovacuum`](https://www.postgresql.org/docs/current/routine-vacuuming.html) 后台守护进程。
 
 在配置文件 `postgresql.conf`，通过如下方式配置：
 
@@ -46,7 +46,7 @@ valgrind --leak-check=yes --gen-suppressions=all \
 以下是客户端的可执行程序 `bsqlsh` 的命令，其中文件 `~/valgrind_bsqlsh.sql` 是需要执行的 sql 语句：
 
 ```bash
-valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all \
+valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --gen-suppressions=all \
     --suppressions=/home/bigmath/code/bigmath-db-crypt/src/postgres/src/tools/valgrind.supp --time-stamp=yes \
     --error-markers=VALGRINDERROR-BEGIN,VALGRINDERROR-END \
     --log-file=$HOME/pg-valgrind/log/%p.log --trace-children=yes \
