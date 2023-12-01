@@ -43,11 +43,11 @@ valgrind --leak-check=yes --gen-suppressions=all \
     --log_statement=all --shared_buffers=128MB -D /home/bigmath/disk2/pg_data -c config_file=/home/bigmath/disk2/pg_data/bsql_pg.conf -c hba_file=/home/bigmath/disk2/pg_data/bsql_hba.conf 2>&1 | tee $HOME/pg-valgrind/postmaster.log
 ```
 
-以下是客户端的可执行程序 `bsqlsh` 的命令，其中文件 `~/valgrind_bsqlsh.sql` 是需要执行的 sql 语句：
+以下是客户端的可执行程序 `bsqlsh` 的命令，并通过文件指定需要执行的 sql 语句：
 
 ```bash
 valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --gen-suppressions=all \
-    --suppressions=/home/bigmath/code/bigmath-db-crypt/src/postgres/src/tools/valgrind.supp --time-stamp=yes \
+    --suppressions=/home/bigmath/code/bigmath-db-crypt/src/postgres/src/tools/valgrind.supp --time-stamp=yes --track-origins=yes \
     --error-markers=VALGRINDERROR-BEGIN,VALGRINDERROR-END \
     --log-file=$HOME/pg-valgrind/log/%p.log --trace-children=yes \
     /home/bigmath/code/bigmath-db-crypt/build/latest/postgres/bin/bsqlsh -C -f /home/bigmath/pg-valgrind/test_sql/create_cmk.sql 2>&1 | tee $HOME/pg-valgrind/postmaster.log
