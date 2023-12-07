@@ -22,6 +22,7 @@ autovacuum = off
 使用如下命令检查可执行程序的内存状态：
 
 ```bash
+# 跟踪可执行程序 a.out 的内存状态
 valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all \
     --suppressions=src/tools/valgrind.supp --time-stamp=yes --track-origins=yes \
     --error-markers=VALGRINDERROR-BEGIN,VALGRINDERROR-END \
