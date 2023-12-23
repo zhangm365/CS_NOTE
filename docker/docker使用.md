@@ -56,3 +56,28 @@ docker exec -it ubuntu-name /bin/bash
 # -m: 提交的描述信息，-a: 指定镜像作者，ubuntu-name: 容器名，ubuntu:22.04: 镜像名
 docker commit -m "ubuntu" -a "zhangmao" ubuntu-name ubuntu:22.04
 ```
+
+# 5. docker 服务
+
+[`SysVInit`](https://wiki.archlinux.org/title/SysVinit) 是 `Linux` 中的经典初始化过程。初始化过程依赖于各个服务在 `/etc/init.d` 目录中安装相关脚本。此外，脚本还必须支持 `start`、`stop` 和 `status` 等标准命令。该启动系统的一个主要特点是，它是一个一次性启动进程，不会在启动后跟踪各个服务。`service` 命令用于从终端运行这些启动脚本。
+
+[`SystemD`](https://man7.org/linux/man-pages/man1/systemd.1.html) 是一种最新的初始化系统，旨在取代 `SysVInit`。事实上，大多数 Linux 发行版（如 Debian 和 Red Hat）都已将 `SystemD` 作为开箱即用的初始化系统。与 `SysVInit` 不同的是，`SystemD` 在初始化完成后会继续作为守护进程运行。此外，它们还通过 `cgroups` 积极跟踪服务。`systemctl` 命令是用户交互和配置 `SystemD` 的入口。
+
+```bash
+sudo systemctl start docker
+# sudo service docker start
+
+sudo systemctl restart docker 
+# sudo service docker restart
+
+sudo systemctl status docker
+# sudo service docker status
+
+sudo systemctl stop docker
+# sudo service docker stop
+
+# Warning: Stopping docker.service, but it can still be activated by:
+#  docker.socket
+sudo systemctl stop docker.socket
+sudo systemctl status docker.socket
+```
