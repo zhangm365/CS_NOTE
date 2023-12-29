@@ -79,16 +79,24 @@ kill $(ps aux | grep 'process_name' | awk '{print $2}')
 ## 4. git config
 
 1. 查看 proxy 信息：
-`chrome://net-export/`
+
+   `chrome://net-export/`
 
 2. 查看 git config 信息：
-`git config --list`
+
+   `git config --list`
 
 3. 配置 git http.proxy：
-`git config --global http.proxy http[s]://proxyaddress:port`
+
+   `git config --global http.proxy http[s]://proxyaddress:port`
 
    - 或者配置为空：
-`git config --global http.proxy ""`
+   `git config --global http.proxy ""`
 
    - 或者取消 proxy：
-`git config --global --unset http.proxy`
+   `git config --global --unset http.proxy`
+
+4. 根据关键字搜索某个库
+
+   `ldconfig -p | grep libwebkit2gtk-4.0`
+   `dpkg -l libgtk[0-9]* | grep ^i`

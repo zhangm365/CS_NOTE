@@ -24,12 +24,14 @@ tar -jxvf postgresql-version.tar.bz2
 # 开启 debug 和 dtrace
 ./configure --enable-debug --enable-dtrace
 make
-su
-make install
+
+sudo make install
 # 可以不用增加新用户，直接使用当前默认用户
 # adduser postgres
 mkdir -p /usr/local/pgsql/data
-chown postgres /usr/local/pgsql/data
+
+# 修改目录的权限为 username 用户
+chown -R username /usr/local/pgsql/data
 # su - postgres
 
 /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data
