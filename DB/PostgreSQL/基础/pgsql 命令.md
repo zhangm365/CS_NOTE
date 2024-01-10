@@ -1,11 +1,13 @@
 
-# `PostgreSQL` 基本用法
+# `PostgreSQL` 基本命令
 <!-- TOC -->
-- [`PostgreSQL` 基本用法](#postgresql-基本用法)
+- [`PostgreSQL` 基本命令](#postgresql-基本命令)
   - [1. 数据库连接信息](#1-数据库连接信息)
   - [2. 数据库大小](#2-数据库大小)
   - [3. 数据表大小](#3-数据表大小)
   - [4. 数据库状态](#4-数据库状态)
+  - [5. 查看索引](#5-查看索引)
+  - [6. 查看建表语句](#6-查看建表语句)
 <!-- /TOC -->
 ## 1. 数据库连接信息
 
@@ -73,3 +75,24 @@ pg_total_relation_size(20306) as total;
 ```sql
 
 ```
+
+## 5. 查看索引
+
+查看某个表上的所有索引。
+
+  ```sql
+  SELECT
+      indexname,
+      indexdef
+  FROM
+      pg_indexes
+  WHERE
+      tablename = 'table_name';
+  ```
+
+## 6. 查看建表语句
+  
+  ```sql
+  -- 使用 pg_dump 查看建表语句，-s 表示只导出 schema，-t 表示只导出指定表，-f 表示导出到指定文件，-W 表示提示输入密码, -U 表示指定用户名, -d 表示指定数据库
+  pg_dump -U username -d databasename -W -s -t table_name -f filename.sql
+  ```

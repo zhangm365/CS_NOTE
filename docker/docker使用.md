@@ -12,7 +12,7 @@ docker ps -a
 # 2. 新建容器并共享宿主主机的文件夹
 
 ```bash
-# -h: 指定主机名，-v: 指定主机的目录 /aaa 映射到 容器中的目录 /BBB
+# -h: 指定主机名，-v: 指定主机的目录 /aaa 映射到容器中的目录 /BBB
 docker run --name ubuntu-name -ti -h "ubuntu" -v /AAA:/BBB -p 80:80 -d ubuntu
 
 # docker 内使用 gdb 调试：需要加 "--cap-add=SYS_PTRACE --security-opt seccomp=unconfined"

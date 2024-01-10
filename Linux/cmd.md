@@ -100,3 +100,16 @@ kill $(ps aux | grep 'process_name' | awk '{print $2}')
 
    `ldconfig -p | grep libwebkit2gtk-4.0`
    `dpkg -l libgtk[0-9]* | grep ^i`
+
+5. 查看文件夹中的文件数量
+
+   ```bash
+   # 查看当前文件夹中的文件数量，不包括文件夹
+   `ls -l | grep "^-" | wc -l`
+
+   # 查看当前文件夹中的文件数量，包括文件夹
+   ls -lR | grep "^-" | wc -l
+
+   # 查看当前文件夹中的文件夹的数量
+   ls -lR | grep "^d" | wc -l
+   ```
