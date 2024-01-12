@@ -7,7 +7,7 @@
   - [3. 数据表大小](#3-数据表大小)
   - [4. 数据库状态](#4-数据库状态)
   - [5. 查看索引](#5-查看索引)
-  - [6. 查看建表语句](#6-查看建表语句)
+  - [6. 导出建表语句和表数据](#6-导出建表语句和表数据)
 <!-- /TOC -->
 ## 1. 数据库连接信息
 
@@ -90,9 +90,15 @@ pg_total_relation_size(20306) as total;
       tablename = 'table_name';
   ```
 
-## 6. 查看建表语句
+## 6. 导出建表语句和表数据
   
   ```sql
   -- 使用 pg_dump 查看建表语句，-s 表示只导出 schema，-t 表示只导出指定表，-f 表示导出到指定文件，-W 表示提示输入密码, -U 表示指定用户名, -d 表示指定数据库
-  pg_dump -U username -d databasename -W -s -t table_name -f filename.sql
+  pg_dump -U username -d databasename -W -s -t table_name -f table_ddl.sql
+
+
+  -- 使用 pg_dump 导出表数据，-a 表示只导出数据，-t 表示只导出指定表，-f 表示导出到指定文件，-W 表示提示输入密码, -U 表示指定用户名, -d 表示指定数据库
+  pg_dump -U username -d databasename -W -a -t table_name > table_data.sql
+
+  pg_dump -U username -d databasename -W -a -t table_name -f table_data.sql
   ```
