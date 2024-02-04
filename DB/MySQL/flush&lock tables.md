@@ -1,5 +1,12 @@
 
-# `FLUSH` Statement
+# `FLUSH | LOCK TABLES` Statements
+
+- [`FLUSH | LOCK TABLES` Statements](#flush--lock-tables-statements)
+  - [1. 语法](#1-语法)
+  - [2. `FLUSH TABLES` Syntax](#2-flush-tables-syntax)
+  - [3. `LOCK TABLES` Statement](#3-lock-tables-statement)
+  - [4. `FLUSH TABLES WITH READ LOCK` vs `LOCK TABLES ... READ`](#4-flush-tables-with-read-lock-vs-lock-tables--read)
+  - [4. `FLUSH TABLES tbl_name [, tbl_name] ... WITH READ LOCK` vs `LOCK TABLES ... READ`](#4-flush-tables-tbl_name--tbl_name--with-read-lock-vs-lock-tables--read)
 
 `[FLUSH Statement](https://dev.mysql.com/doc/refman/8.3/en/flush.html)` 用于清除或重载内部缓存、刷新表或获取锁。
 
@@ -59,10 +66,43 @@ tables_option: {
 
 通过 `UNLOCK TABLES` 释放锁或 `START TARNSACTION` 释放锁并开始新事务。
 
-## 3. `FLUSH TABLES WITH READ LOCK` vs `LOCK TABLES ... READ`
+## 3. `LOCK TABLES` Statement
+
+`LOCK TABLES` 用于当前会话显式获取表锁，以便与其他会话进行合作或防止其他会话在独占表期间修改表。`UNLOCK TABLES` 用于释放锁。
+
+`LOCK TABLES` 语法如下：
+
+```sql
+LOCK TABLES
+    tbl_name [[AS] alias] lock_type
+    [, tbl_name [[AS] alias] lock_type] ...
+
+lock_type: {
+    READ [LOCAL]
+  | [LOW_PRIORITY] WRITE
+}
+
+UNLOCK TABLES
+```
+
+`LOCK TABLES` 语句的 `READ` 锁特点如下：
+
+- 会话使用 `READ` 锁定表，仅可读数据，不能写表；
+
+- 多个会话可以同时请求相同表的 `READ` 锁；
+
+- 其他会话可以读表，无需显式请求 `READ` 锁；
+
+## 4. `FLUSH TABLES WITH READ LOCK` vs `LOCK TABLES ... READ`
 
 `FLUSH TABLES WITH READ LOCK` 获取全局读锁。因此，`FLUSH TABLES WITH READ LOCK` 与 `LOCK TABLES ... READ` 的区别在于表锁和隐式提交两个方面：
 
-- 在 `LOCK TABLES ... READ` 锁定当前任何表的情况下，`UNLOCK TABLES` 会隐式提交任何活跃事务，而不会提交 `FLUSH TABLES WITH READ LOCK` 中开启的事务；
+- 在 `LOCK TABLES ... READ` 锁定当前任何表的情况下，`UNLOCK TABLES` 会隐式提交任何活跃事务，而不会提交在 `FLUSH TABLES WITH READ LOCK` 中开启的事务；
 
-- `START TRANSACTION` 会释放 `LOCK TABLES ... READ` 获取的表锁，像执行了 `UNLOCK TABLES`。
+- `START TRANSACTION` 会释放 `LOCK TABLES ... READ` 获取的表锁，像执行了 `UNLOCK TABLES`，从而可以在开启的事务中执行写操作。
+
+## 4. `FLUSH TABLES tbl_name [, tbl_name] ... WITH READ LOCK` vs `LOCK TABLES ... READ`
+
+它们均会获取表锁，区别如下：
+
+- 当前会话通过 `FLUSH TABLES tbl_name [, tbl_name] ... WITH READ LOCK` 在指定表上获取表锁后，其他会话无法同时对相同表获取表锁，而 `LOCK TABLES ... READ` 可以；

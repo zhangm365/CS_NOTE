@@ -545,7 +545,6 @@ public class MySqlConnectionUtils {
  * seatunnel/seatunnel-connectors-v2/connector-cdc/connector-cdc-mysql/src/main/java/org/apache/seatunnel/connectors/seatunnel/cdc/mysql/source/reader/fetch/scan/MySqlSnapshotFetchTask.java
  * 
  * 
-
  ***/
 @Slf4j
 public class MySqlSnapshotFetchTask implements FetchTask<SourceSplitBase> {
