@@ -60,7 +60,9 @@ tables_option: {
 
 该操作的步骤如下：
 
-- 首先获取表的独占元数据锁。然后刷新表缓存，重新打开表并获取表锁（`LOCK TABLES ... READ`），并将独占元数据锁降为共享锁；
+- 首先获取表的独占元数据锁。然后刷新表缓存，重新打开表并获取表锁（`LOCK TABLES ... READ`），并将元数据锁从独占降为共享锁；
+
+>> [Metadata Lock](https://dev.mysql.com/doc/refman/8.3/en/metadata-locking.html) 用于管理数据库对象的并发访问和确保数据的一致性。元数据锁不仅适用于 tables, 还包括 schemas, procedures, functions, triggers 等。
 
 - 在获取表锁和降级元数据锁后，其他会话仅可读不可写表。
 
