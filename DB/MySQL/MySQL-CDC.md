@@ -534,11 +534,19 @@ public class MySqlConnectionUtils {
 ### 1.4 `snapshot`
 
 如何获取 `snapshot` ？
+通过 `MySqlSnapshotSplitReadTask` 读取数据分片 `Split`。
 
+如何计算 `snapshot` ？
 快照格式：
 `[low watermark event][snapshot events][high watermark event]`
 
-通过 `MySqlSnapshotFetchTask` 实现 `snapshot` 的获取。
+1. 获取 `low watermark`;
+2. 生成快照数据 `createDataEvents`；
+3. 获取 `high watermark`；
+
+基于 `binlog` 的 `filename` 和 `position` 计算 `snapshot` 的 `low watermark` 和 `high watermark`。
+
+而 `createBackfillBinlogReadTask` 负责回填 `binlog` 的 `low watermark` 和 `high watermark` 之间的 `offset`。
 
 ```java
 /***
@@ -549,7 +557,7 @@ public class MySqlConnectionUtils {
 @Slf4j
 public class MySqlSnapshotFetchTask implements FetchTask<SourceSplitBase> {
 
-    /* 快照分片标识符 */
+    /* 快照分片 */
     private final SnapshotSplit split;
 
     private volatile boolean taskRunning = false;
