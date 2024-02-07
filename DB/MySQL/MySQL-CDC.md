@@ -12,6 +12,7 @@
     - [1.2. `binlog`](#12-binlog)
     - [1.3. `MySqlConnectionUtils`](#13-mysqlconnectionutils)
     - [1.4 `snapshot`](#14-snapshot)
+      - [1.4.1 `snapshot locking mode`](#141-snapshot-locking-mode)
 
 基于 `Debezium` 分布式框架实现 `MySQL CDC` 的功能接口。
 `Debezium` 通过读取 `MySQL` 的 `binlog` 日志，将数据变更事件转换成 `Kafka` 消息，然后通过 `Kafka Connect` 将消息写入到 `Kafka topic` 集群中。
@@ -533,8 +534,10 @@ public class MySqlConnectionUtils {
 
 ### 1.4 `snapshot`
 
+连接器启动后，它会根据连接器对 `MySQL` 的配置属性执行一致性快照。然后连接器执行行级操作生成数据变更事件，并将变更记录流式传输到 `Kafka topics`。
+
 如何获取 `snapshot` ？
-通过 `MySqlSnapshotSplitReadTask` 读取数据分片 `Split`。
+通过 `MySqlSnapshotSplitReadTask` 读取数据分片 `SnapshotSplit`。
 
 如何计算 `snapshot` ？
 快照格式：
@@ -653,11 +656,6 @@ public class MySqlSnapshotFetchTask implements FetchTask<SourceSplitBase> {
 /* 快照分片读取任务的构造函数 */
 public class MySqlSnapshotSplitReadTask extends AbstractSnapshotChangeEventSource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MySqlSnapshotSplitReadTask.class);
-
-    /** Interval for showing a log statement with the progress while scanning a single table. */
-    private static final Duration LOG_INTERVAL = Duration.ofMillis(10_000);
-
     // ...
 
     // Decode text protocol value for MySQL
@@ -741,5 +739,44 @@ public class MySqlSnapshotSplitReadTask extends AbstractSnapshotChangeEventSourc
     } // @end doExecute
     
 } // @end MySqlSnapshotSplitReadTask
+
+```
+
+- 1. `doSnapshot` 调用 `SnapshotChangeEventSource.execute(...)` 执行快照任务。
+
+- 2. `getSnapshottingTask(MySqlPartition, MySqlOffsetContext)` 创建快照生成过程中要执行的任务。通过获取 `snapshot.mode` 的配置项来决定快照中是否包括 `schema` 和 `data`。
+
+- 3. `ChangeEventQueue`：用于处理生产者线程(e.g. MySQL's binlog reader thread) 和 `Kafka Connect` 轮询之间的数据交换点。
+
+#### 1.4.1 `snapshot locking mode`
+
+`Debezium MySQL Connector` 负责快照生成时的锁模式，通过请求 `MySQL` 的 `FLUSH TABLES WITH READ LOCK` 全局读锁实现。
+
+```java
+/***
+ * debezium/debezium-connector-mysql/src/main/java/io/debezium/connector/mysql/MySqlSnapshotChangeEventSource.java
+ * 1. lockTablesForSchemaSnapshot 负责请求 MySQL 的全局读锁；
+ * 2. releaseSchemaSnapshotLocks 释放全局锁； 
+ **/
+public class MySqlSnapshotChangeEventSource extends RelationalSnapshotChangeEventSource<MySqlPartition, MySqlOffsetContext> {
+    
+    /**
+     * Locks all tables to be captured, so that no concurrent schema changes can be applied to them.
+     * 这个接口函数由 RelationalSnapshotChangeEventSource 提供。
+     */
+    @Override
+    protected void lockTablesForSchemaSnapshot(ChangeEventSourceContext sourceContext,
+                                               RelationalSnapshotContext<MySqlPartition, MySqlOffsetContext> snapshotContext) throws SQLException {
+        // set REPEATABLE_READ isolation level
+        connection.connection().setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+        if (connectorConfig.getSnapshotLockingMode().usesLocking() && connectorConfig.useGlobalLock()) {
+            try {
+                globalLock();   // 请求全局读锁
+                metrics.globalLockAcquired();
+            }
+        }                    
+    } // @end lockTablesForSchemaSnapshot
+}
+
 
 ```

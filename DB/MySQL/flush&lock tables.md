@@ -101,10 +101,12 @@ UNLOCK TABLES
 
 - 在 `LOCK TABLES ... READ` 锁定当前任何表的情况下，`UNLOCK TABLES` 会隐式提交任何活跃事务，而不会提交在 `FLUSH TABLES WITH READ LOCK` 中开启的事务；
 
-- `START TRANSACTION` 会释放 `LOCK TABLES ... READ` 获取的表锁，像执行了 `UNLOCK TABLES`，从而可以在开启的事务中执行写操作。
+- `START TRANSACTION` 会释放 `LOCK TABLES ... READ` 获取的表锁，类似执行了 `UNLOCK TABLES` 语句，从而可以在开启的事务中执行写操作。
 
 ## 4. `FLUSH TABLES tbl_name [, tbl_name] ... WITH READ LOCK` vs `LOCK TABLES ... READ`
 
 它们均会获取表锁，区别如下：
 
 - 当前会话通过 `FLUSH TABLES tbl_name [, tbl_name] ... WITH READ LOCK` 在指定表上获取表锁后，其他会话无法同时对相同表获取表锁，而 `LOCK TABLES ... READ` 可以；
+
+- `FLUSH TABLES tbl_name [, tbl_name] ... WITH READ LOCK` 可以批量获取表锁，语法简单，而 `LOCK TABLES ... READ` 需要逐个获取表锁。
