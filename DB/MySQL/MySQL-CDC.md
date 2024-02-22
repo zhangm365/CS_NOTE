@@ -12,7 +12,10 @@
     - [1.2. `binlog`](#12-binlog)
     - [1.3. `MySqlConnectionUtils`](#13-mysqlconnectionutils)
     - [1.4 `snapshot`](#14-snapshot)
-      - [1.4.1 `snapshot locking mode`](#141-snapshot-locking-mode)
+      - [`MySqlSnapshotFetchTask`](#mysqlsnapshotfetchtask)
+      - [`MySqlSnapshotSplitReadTask`](#mysqlsnapshotsplitreadtask)
+      - [`ChangeEventSourceCoordinator`](#changeeventsourcecoordinator)
+    - [1.5 `snapshot locking mode`](#15-snapshot-locking-mode)
 
 基于 `Debezium` 分布式框架实现 `MySQL CDC` 的功能接口。
 `Debezium` 通过读取 `MySQL` 的 `binlog` 日志，将数据变更事件转换成 `Kafka` 消息，然后通过 `Kafka Connect` 将消息写入到 `Kafka topic` 集群中。
@@ -551,6 +554,10 @@ public class MySqlConnectionUtils {
 
 而 `createBackfillBinlogReadTask` 负责回填 `binlog` 的 `low watermark` 和 `high watermark` 之间的 `offset`。
 
+如下是相关类的实现：
+
+#### `MySqlSnapshotFetchTask`
+
 ```java
 /***
  * seatunnel/seatunnel-connectors-v2/connector-cdc/connector-cdc-mysql/src/main/java/org/apache/seatunnel/connectors/seatunnel/cdc/mysql/source/reader/fetch/scan/MySqlSnapshotFetchTask.java
@@ -651,8 +658,11 @@ public class MySqlSnapshotFetchTask implements FetchTask<SourceSplitBase> {
     } // @end execute((FetchTask.Context context)
 
 } // @end MySqlSnapshotFetchTask
+```
 
+#### `MySqlSnapshotSplitReadTask`
 
+```java
 /* 快照分片读取任务的构造函数 */
 public class MySqlSnapshotSplitReadTask extends AbstractSnapshotChangeEventSource {
 
@@ -685,6 +695,9 @@ public class MySqlSnapshotSplitReadTask extends AbstractSnapshotChangeEventSourc
     public SnapshotResult execute(
             ChangeEventSource.ChangeEventSourceContext context, OffsetContext previousOffset)
             throws InterruptedException {
+        /* 
+         * 创建快照生成过程中要执行的任务。通过获取 `snapshot.mode` 的配置项来决定快照中是否包括 `schema` 和 `data`。
+         */
         SnapshottingTask snapshottingTask = getSnapshottingTask(previousOffset);
         final SnapshotContext ctx;
         try {
@@ -742,13 +755,66 @@ public class MySqlSnapshotSplitReadTask extends AbstractSnapshotChangeEventSourc
 
 ```
 
-- 1. `doSnapshot` 调用 `SnapshotChangeEventSource.execute(...)` 执行快照任务。
+#### `ChangeEventSourceCoordinator`
 
-- 2. `getSnapshottingTask(MySqlPartition, MySqlOffsetContext)` 创建快照生成过程中要执行的任务。通过获取 `snapshot.mode` 的配置项来决定快照中是否包括 `schema` 和 `data`。
+负责执行快照源，生成快照和增量流事件。
 
-- 3. `ChangeEventQueue`：用于处理生产者线程(e.g. MySQL's binlog reader thread) 和 `Kafka Connect` 轮询之间的数据交换点。
+进一步调用关系是：
 
-#### 1.4.1 `snapshot locking mode`
+- 1. `MySqlConnector.taskClass`，返回 `MySqlConnectorTask` 类对象，`MySqlConnector` 是连接器类型；
+
+- 2. `MySqlConnectorTask.start(Configuration configuration)` 生成 `ChangeEventSourceCoordinator` 对象实例；
+
+- 3. `ChangeEventSourceCoordinator.start()` 创建一个线程执行执行生成快照任务 `executeChangeEventSources`;  
+
+- 4. `executeChangeEventSources` 调用 `doSnapshot`;
+
+- 5. `doSnapshot` 调用 `SnapshotChangeEventSource.execute(...)` 执行快照任务。
+
+```java
+/**
+ * Coordinates one or more {@link ChangeEventSource}s and executes them in order.
+ * 
+ * @author Gunnar Morling
+ * 
+ * debezium/debezium-connector-mysql/src/main/java/io/debezium/connector/mysql/MySqlConnectorTask.java
+ */
+@ThreadSafe
+public class ChangeEventSourceCoordinator<P extends Partition, O extends OffsetContext> {
+    
+    // ...
+    // `ChangeEventQueue`：用于处理生产者线程(e.g. MySQL's binlog reader thread) 和 `Kafka Connect` 轮询之间的数据交换点。
+    private volatile ChangeEventQueue<DataChangeEvent> queue;
+    /*
+     * 执行更改事件源。
+     * 1. doSnapshot：生成快照；
+     * 2. streamEvents：生成增量流事件；
+     */
+    protected void executeChangeEventSources(CdcSourceTaskContext taskContext, SnapshotChangeEventSource<P, O> snapshotSource, Offsets<P, O> previousOffsets,
+                                             AtomicReference<LoggingContext.PreviousContext> previousLogContext, ChangeEventSourceContext context)
+            throws InterruptedException {
+        final P partition = previousOffsets.getTheOnlyPartition();
+        final O previousOffset = previousOffsets.getTheOnlyOffset();
+
+        previousLogContext.set(taskContext.configureLoggingContext("snapshot", partition));
+        
+        // 1. 生成快照
+        SnapshotResult<O> snapshotResult = doSnapshot(snapshotSource, context, partition, previousOffset);
+
+        getSignalProcessor(previousOffsets).ifPresent(s -> s.setContext(snapshotResult.getOffset()));
+
+        LOGGER.debug("Snapshot result {}", snapshotResult);
+
+        if (running && snapshotResult.isCompletedOrSkipped()) {
+            previousLogContext.set(taskContext.configureLoggingContext("streaming", partition));
+            // 2. 生成快照后，继续生成流事件。
+            streamEvents(context, partition, snapshotResult.getOffset());
+        }
+    }   
+}
+```
+
+### 1.5 `snapshot locking mode`
 
 `Debezium MySQL Connector` 负责快照生成时的锁模式，通过请求 `MySQL` 的 `FLUSH TABLES WITH READ LOCK` 全局读锁实现。
 
@@ -777,6 +843,5 @@ public class MySqlSnapshotChangeEventSource extends RelationalSnapshotChangeEven
         }                    
     } // @end lockTablesForSchemaSnapshot
 }
-
 
 ```
