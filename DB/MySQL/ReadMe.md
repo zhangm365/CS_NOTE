@@ -7,7 +7,7 @@
 
 1. ERROR 1698 (28000): Access denied for user 'root'@'localhost'
 
-    每次通过 mysql 连接数据库必须使用 `root` 权限，否则出现这个错误。
+    每次通过 `mysql` 连接数据库必须使用 `root` 权限，否则出现这个错误。
 
     ```bash
         sudo mysql -u root # I had to use "sudo" since it was a new installation
