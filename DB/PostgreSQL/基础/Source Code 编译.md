@@ -30,19 +30,26 @@ sudo make install
 # adduser postgres
 mkdir -p /usr/local/pgsql/data
 
-# 修改目录的权限为 username 用户
+# 修改目录的权限为当前 username 用户
 chown -R username /usr/local/pgsql/data
 # su - postgres
 
+# 初始化数据目录
 /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data
+# 启动数据库
 /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l logfile start
+# 创建数据库 test
 /usr/local/pgsql/bin/createdb test
+# 连接数据库 test
 /usr/local/pgsql/bin/psql test
 
 
 # 添加环境变量
 export PGPATH=/usr/local/pgsql
 export PATH=$PGPATH/bin:$PATH
+
+# 停止数据库(https://www.postgresql.org/docs/current/app-pg-ctl.html)
+pg_ctl start [-D datadir] [-l filename]
 
 ```
 
