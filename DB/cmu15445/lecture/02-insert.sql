@@ -1,4 +1,5 @@
 
+-- DDL
 CREATE TABLE student (
     sid INT PRIMARY KEY,
     name VARCHAR(16),
@@ -18,6 +19,8 @@ CREATE TABLE enrolled (
     grade CHAR(1)
 );
 
+
+-- DML: INSERT
 insert into student values 
     (53666, 'RZA', 'rza@cs', 44, 4.0),
     (53688, 'Bieber', 'jbieber@cs', 27, 3.9),
@@ -36,6 +39,39 @@ insert into enrolled values
     (53655, '15-445', 'B'),
     (53666, '15-721', 'C');
 
+
+-- select : base
+
+-- pgsql: ERROR:  column "e.cid" must appear in the GROUP BY clause or be used in an aggregate function 
+-- SELECT AVG(s.gpa), e.cid FROM enrolled AS e JOIN student AS s ON e.sid = s.sid;
+
+SELECT * 
+FROM enrolled AS e, student AS s
+WHERE e.sid = s.sid;
+
+-- the same as above
+SELECT * 
+FROM enrolled AS e join student AS s on e.sid = s.sid;
+
+
+SELECT AVG(s.gpa), e.cid 
+FROM enrolled AS e, student AS s
+WHERE e.sid = s.sid
+GROUP BY e.cid;
+
+-- pgsql: ERROR:  column "avg_gpa" does not exist
+-- SELECT AVG(s.gpa) AS avg_gpa, e.cid
+-- FROM enrolled AS e, student AS s
+-- WHERE e.sid = s.sid
+-- GROUP BY e.cid
+-- HAVING avg_gpa > 3.9;
+
+
+SELECT AVG(s.gpa) AS avg_gpa, e.cid
+FROM enrolled AS e, student AS s
+WHERE e.sid = s.sid
+GROUP BY e.cid
+HAVING AVG(s.gpa) > 3.9;
 
 -- NESTED QUERIES
 -- Find the names of students who are enrolled in 15-445
