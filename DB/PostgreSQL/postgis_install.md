@@ -9,10 +9,15 @@
 
 ## 1. 安装依赖库
 # 安装依赖库使得运行 ./configure 时不会报错.
-# 
+
+# libpq
 sudo apt-get install libpq-dev
 
+# libxml2
 sudo apt install libxml2-dev
+
+# geos lib
+sudo apt install libgeos-dev
 
 # proj lib 
 sudo apt install libproj-dev
@@ -52,3 +57,5 @@ sudo make EXTENSIONDIR=/usr/local/pgsql/share/extension/ install
 ```sql
 create extension postgis;
 ```
+
+创建成功后，表明安装成功。
