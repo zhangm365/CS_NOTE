@@ -51,7 +51,13 @@ export PATH=$PGPATH/bin:$PATH
 # 停止数据库(https://www.postgresql.org/docs/current/app-pg-ctl.html)
 pg_ctl start [-D datadir] [-l filename]
 
+
+# 查看端口信息
+netstat -tuln | grep 5432
+lsof -i :5432
+
 ```
+
 
 ## 2. `PostgreSQL` 版本号
 
