@@ -1,5 +1,5 @@
 
--- DDL
+-- 1. DDL -----------------------------------
 CREATE TABLE student (
     sid INT PRIMARY KEY,
     name VARCHAR(16),
@@ -18,9 +18,9 @@ CREATE TABLE enrolled (
     cid VARCHAR(32) REFERENCES course (cid),
     grade CHAR(1)
 );
+--------------------------------------------
 
-
--- DML: INSERT
+-- 2. DML: INSERT --------------------------
 insert into student values 
     (53666, 'RZA', 'rza@cs', 44, 4.0),
     (53688, 'Bieber', 'jbieber@cs', 27, 3.9),
@@ -38,9 +38,9 @@ insert into enrolled values
     (53688, '15-826', 'B'),
     (53655, '15-445', 'B'),
     (53666, '15-721', 'C');
+--------------------------------------------
 
-
--- select : base
+-- 3. select : base
 
 -- pgsql: ERROR:  column "e.cid" must appear in the GROUP BY clause or be used in an aggregate function 
 -- SELECT AVG(s.gpa), e.cid FROM enrolled AS e JOIN student AS s ON e.sid = s.sid;
@@ -66,12 +66,16 @@ GROUP BY e.cid;
 -- GROUP BY e.cid
 -- HAVING avg_gpa > 3.9;
 
-
 SELECT AVG(s.gpa) AS avg_gpa, e.cid
 FROM enrolled AS e, student AS s
 WHERE e.sid = s.sid
 GROUP BY e.cid
 HAVING AVG(s.gpa) > 3.9;
+
+
+-- 4. string function ---------------------
+SELECT SUBSTRING(name,1,5) AS abbrv_name
+FROM student WHERE sid = 53688;
 
 -- NESTED QUERIES
 -- Find the names of students who are enrolled in 15-445
