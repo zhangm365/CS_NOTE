@@ -77,7 +77,40 @@ HAVING AVG(s.gpa) > 3.9;
 SELECT SUBSTRING(name,1,5) AS abbrv_name
 FROM student WHERE sid = 53688;
 
--- NESTED QUERIES
+
+--- 5. output redirection
+--- store the query results in another table.
+-- SQL-92
+SELECT DISTINCT cid INTO CourseIds
+FROM enrolled;
+
+-- Postgres, the temporary table is in pg_temp_3 schema, while the default schema is public if it isn't temporary table.
+SELECT DISTINCT cid
+INTO TEMPORARY CourseIds
+FROM enrolled;
+
+-- mysql
+CREATE TABLE CourseIds (
+    SELECT DISTINCT cid FROM enrolled);
+
+-- order by
+SELECT sid, grade FROM enrolled
+WHERE cid = '15-721'
+ORDER BY 2;
+
+-- fetch first # rows
+SELECT sid, name FROM student
+WHERE login LIKE '%@cs'
+FETCH FIRST 10 ROWS ONLY;
+
+-- fetch first # rows with ties(包括并列行)
+SELECT sid, name FROM student
+WHERE login LIKE '%@cs'
+ORDER BY gpa
+OFFSET 10 ROWS
+FETCH FIRST 10 ROWS WITH TIES;
+
+-- 6. NESTED QUERIES
 -- Find the names of students who are enrolled in 15-445
 select name from student where sid in (select sid from enrolled where cid = '15-445');
 
@@ -91,6 +124,37 @@ SELECT sid, name FROM student
         ORDER BY sid DESC LIMIT 1
     )
 ;
+
+SELECT name FROM student
+WHERE sid in (
+    SELECT sid FROM enrolled
+    WHERE cid = '15-445'
+);
+
+-- same as the above
+SELECT name FROM student
+WHERE sid = any (
+    SELECT sid FROM enrolled
+    WHERE cid = '15-445'
+);
+
+-- ERROR:  column "s.name" must appear in the GROUP BY clause or be used in an aggregate function
+SELECT MAX(e.sid), s.name
+FROM enrolled AS e, student AS s
+WHERE e.sid = s.sid;
+
+SELECT sid, name FROM student
+WHERE sid IN (
+    SELECT MAX(sid) FROM enrolled
+);
+
+
+SELECT sid, name FROM student
+WHERE sid IN (
+SELECT sid FROM enrolled
+ORDER BY sid DESC FETCH FIRST 1 ROW ONLY
+);
+
 
 -- method 3
 SELECT student.sid, name
@@ -111,3 +175,29 @@ select course.cid from course where not exists (
     select cid from enrolled
         where course.cid = enrolled.cid
 );
+
+
+-- 7. window function: row_number, 在当前行引入一个行号
+-- over: 切分规则
+SELECT *, ROW_NUMBER() OVER () AS row_num
+FROM enrolled;
+
+-- RANK: 当前行的排名
+SELECT *, RANK() OVER () AS rank
+FROM enrolled;
+
+-- 使用 partition by 语义，对每个 cid 分别计算 row_number
+SELECT *, ROW_NUMBER() OVER (partition by cid) AS row_num
+FROM enrolled
+order by cid;
+
+SELECT *, ROW_NUMBER() OVER (order by cid) AS row_num
+FROM enrolled
+order by cid;
+
+-- 查找：以 cid 分组，对每个 cid 的学生成绩进行排序，找到第二高的学生成绩
+SELECT * FROM (
+    SELECT *, RANK() OVER (PARTITION BY cid
+    ORDER BY grade ASC) AS rank
+    FROM enrolled) AS ranking
+WHERE ranking.rank = 2;
