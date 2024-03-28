@@ -201,3 +201,31 @@ SELECT * FROM (
     ORDER BY grade ASC) AS rank
     FROM enrolled) AS ranking
 WHERE ranking.rank = 2;
+
+
+
+--- 8. common table expression
+WITH cteName AS (
+SELECT 1
+)
+SELECT * FROM cteName;
+
+
+WITH cteSource (maxId) AS (
+SELECT MAX(sid) FROM enrolled
+)
+SELECT name FROM student, cteSource
+WHERE student.sid = cteSource.maxId;
+
+
+--- 9. lateral join
+SELECT * FROM
+(SELECT 1 AS x) AS t1,
+LATERAL (SELECT t1.x+1 AS y) AS t2;
+
+SELECT * FROM course AS c,
+LATERAL (SELECT COUNT(*) AS cnt FROM enrolled  -- Compute the # of enrolled students
+WHERE enrolled.cid = c.cid) AS t1,
+LATERAL (SELECT AVG(gpa) AS avg FROM student AS s  -- Compute the average gpa of enrolled students
+JOIN enrolled AS e ON s.sid = e.sid
+WHERE e.cid = c.cid) AS t2;
