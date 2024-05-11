@@ -37,7 +37,7 @@ FLUSH PRIVILEGES;
 
 --- 3. root 用户远程访问
 use mysql;
-select user,host from user;
+select user, host from user;
 update user set host="%" where user="root";
 FLUSH PRIVILEGES;
 
