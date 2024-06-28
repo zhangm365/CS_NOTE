@@ -38,6 +38,9 @@ export PATH=/usr/local/bin:$PATH
 # install python2 && python3
 sudo update-alternatives --install /usr/local/bin/python python /usr/bin/python2 1
 sudo update-alternatives --install /usr/local/bin/python python /usr/bin/python3 2
+
+## 卸载
+sudo update-alternatives --remove python /usr/bin/python3
 # 查看关于 python 的环境配置
 sudo update-alternatives --list python
 # 比 list 参数更详细的 output
