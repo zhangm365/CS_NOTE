@@ -45,8 +45,8 @@ chown -R username /usr/local/pgsql/data
 
 
 # 添加环境变量
-export PGPATH=/usr/local/pgsql
-export PATH=$PGPATH/bin:$PATH
+export PG_HOME="/usr/local/pgsql"
+export PATH="${PG_HOME}/bin:$PATH"
 
 # 停止数据库(https://www.postgresql.org/docs/current/app-pg-ctl.html)
 pg_ctl start [-D datadir] [-l filename]
