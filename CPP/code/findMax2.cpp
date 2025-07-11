@@ -10,7 +10,7 @@
 std::vector<int64_t> findMax2(const std::vector<int64_t>& input) {
     /// Your code here
     /// This function should return the one or two largest numbers in the input vector.
-    if (input.size() == 0) return {};
+    if (input.empty()) return {};
     
     int64_t max_1 = INT64_MIN, max_2 = INT64_MIN;
 
