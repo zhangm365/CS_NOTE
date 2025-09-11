@@ -23,11 +23,11 @@ void consumer() {
 void producer() {
     // 模拟生产耗时
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    {
-        std::lock_guard<std::mutex> lk(mtx);
-        ready = true;
-        std::cout << "[Producer] 资源已准备好，发出通知。\n";
-    }  // 自动释放锁
+
+    std::scoped_lock<std::mutex> slk(mtx);
+    ready = true;
+    std::cout << "[Producer] 资源已准备好，发出通知。\n";
+    
     cv.notify_one();  // 通知一个等待线程
 }
 
