@@ -16,6 +16,7 @@ void *child(void *arg) {
 }
 
 int main() {
+
     printf("parent begin\n");
     pthread_t c;
     Pthread_create(&c, NULL, child, NULL);
