@@ -13,9 +13,9 @@ std::condition_variable cv;
 void consumer() {
     std::unique_lock lk(mtx);
     std::cout << "[Consumer] 等待资源...\n";
-    // 使用带谓词的 wait，防止虚假唤醒或错过通知
+    // 使用带谓词的 wait，防止虚假唤醒或错过通知.
     cv.wait(lk, []{ return (g_val == 1); });
-    // 唤醒后一定拿到了锁，且 ready == true
+    // 唤醒后一定拿到了锁，满足 g_val == 1.
     std::cout << "[Consumer] 获得资源，开始消费。\n";
 }
 
