@@ -6,7 +6,6 @@
 #include <chrono>
 
 volatile int g_val = 0; // 全局变量，供线程间通信使用
-bool ready = false;  // 资源就绪标志
 std::mutex mtx;
 std::condition_variable cv;
 
@@ -15,7 +14,7 @@ void consumer() {
     std::unique_lock lk(mtx);
     std::cout << "[Consumer] 等待资源...\n";
     // 使用带谓词的 wait，防止虚假唤醒或错过通知
-    cv.wait(lk, []{ return (ready && (g_val == 1)); });
+    cv.wait(lk, []{ return (g_val == 1); });
     // 唤醒后一定拿到了锁，且 ready == true
     std::cout << "[Consumer] 获得资源，开始消费。\n";
 }
@@ -26,7 +25,6 @@ void producer() {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     std::scoped_lock slk(mtx);
-    ready = true;
     g_val += 1;
     std::cout << "[Producer] 资源已准备好，发出通知。\n";
     
