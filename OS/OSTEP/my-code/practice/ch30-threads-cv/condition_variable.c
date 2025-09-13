@@ -1,16 +1,13 @@
 /**
  * condition variables
- * @file
- * @brief
+ * @author: zhangm365
+ * @file: condition_variable.c
+ * @brief: condition variable. https://pages.cs.wisc.edu/~remzi/OSTEP/threads-cv.pdf
  *
  */
 
 #include <pthread.h>
-#include <stdint.h>
 #include <stdio.h>
-
-#include <sys/_pthread/_pthread_cond_t.h>
-#include <sys/_pthread/_pthread_mutex_t.h>
 #include <unistd.h>
 #include <assert.h>
 #include "common_threads.h"
