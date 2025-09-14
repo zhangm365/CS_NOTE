@@ -63,7 +63,7 @@ set(PRACTICE_DIRS
 foreach(dir ${PRACTICE_DIRS})
 	set(abs "${CMAKE_CURRENT_SOURCE_DIR}/${dir}")
 	file(GLOB SRCS CONFIGURE_DEPENDS
-		"${abs}/*.c" "${abs}/*.cc" "${abs}/*.cpp" "${abs}/*.cxx")
+		"${abs}/*.c" "${abs}/*.cc" "${abs}/*.cpp")
 	foreach(src ${SRCS})
 		get_filename_component(name ${src} NAME_WE)
 		add_executable(${name} ${src})

@@ -12,12 +12,12 @@
 #include <assert.h>
 #include "common_threads.h"
 
-volatile int val = 0;
+int val = 0;
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-void thr_exit() {
+void thr_process() {
     Pthread_mutex_lock(&lock);
     val = 1;
     Pthread_cond_signal(&cond);
@@ -26,11 +26,11 @@ void thr_exit() {
 
 void *child(void *arg) {
     printf("child\n");
-    thr_exit();
+    thr_process();
     return NULL;
 }
 
-void thr_join() {
+void thr_wait() {
     Pthread_mutex_lock(&lock);
     while (val == 0) {
         pthread_cond_wait(&cond, &lock);
@@ -44,9 +44,11 @@ int main() {
     printf("parent begin\n");
     pthread_t c;
     Pthread_create(&c, NULL, child, NULL);
-    // Pthread_join(c, NULL);
-    thr_join();
+
+    thr_wait();
     printf("parent end, the val = %d\n", val);
+    // 等待子线程正常退出.
+    Pthread_join(c, NULL);
     return 0;
 }
 
